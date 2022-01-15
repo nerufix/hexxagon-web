@@ -1,0 +1,17 @@
+[
+  {
+    "login": "admin",
+    "password": "admin",
+    "role": "admin"
+  },
+  {
+    "login": "xXx_sexikalineczka_xXx",
+    "password": "kotek123",
+    "role": "user"
+  },
+  {
+    "login": "user",
+    "password": "user",
+    "role": "user"
+  }
+]
