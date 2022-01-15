@@ -1,0 +1,129 @@
+
+$theme-colors: (
+    "primary": #9c6012,
+    "secondary": #30691d,
+    "info": teal,
+    "danger": tomato,
+    "dark": #3a3749
+);
+
+$form-check-input-checked-bg-color: #30691d;
+$component-active-bg: #9c6012;
+$component-active-color: #9c6012;
+
+@import "~bootstrap/scss/bootstrap";
+
+$body-bg: #000;
+$body-color: #111;
+
+
+$primary: #343434;
+$secondary: #f6f4f2;
+$bootstrap-default: #0d6efd;
+
+h1, h2, h3, h4, h5, h6, p {
+  overflow-wrap: anywhere;
+}
+
+.mid {
+  justify-content: center;
+  text-align: center;
+  * {
+    justify-content: left;
+    text-align: left;
+  }
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.navbar {
+  * {
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 0.3rem;
+    font-size: 1.5rem;
+    min-height: 20px;
+  }
+}
+
+.marked {
+  filter: sepia(100%) contrast(500%);
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.page-link:focus {
+  background-color: white;
+  box-shadow: none;
+  color: $primary;
+}
+
+.dropdown-toggle:hover .dropdown-menu {
+    display: block;
+    z-index: 1;
+}
+
+.panel {
+  min-width: 400px;
+  max-width: 900px;
+  color: white;
+  font-weight: 200;
+}
+
+.back-link {
+  &:hover {
+    color: #0a58ca;
+    cursor: pointer;
+  }
+}
+
+.modal {
+  position: fixed;
+  display: block;
+  .modal-lg {
+    max-width: 1000px;
+  }
+}
+
+.dropdown-menu-right {
+  height: auto;
+  max-height: 400px;
+  overflow-x: hidden;
+  right: 0;
+}
+
+.status {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  h1 {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.error {
+  border: 2px solid #FF6565;
+}
+
+.main {
+  background:none;
+  height: 100vh;
+  background-color: rgba(rgb(9, 0, 43), 0.7);
+  display: flex;
+  justify-content: center;
+  .middle {
+    align-self: center;
+  }
+}
