@@ -11,14 +11,9 @@ import sha256 from 'crypto-js/sha256';
 function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
 
   const history = useHistory()
-
   
-
   const handleSubmit = (values) => {
-    setBadLoginAttempt(false)
-    postLogin({...values, password: sha256(values.password).toString()}).then((res) => {
-      res.error ? setBadLoginAttempt(true) : history.push('/dashboard')
-    })
+    postLogin({...values, password: sha256(values.password).toString()})
   }
 
   const schema = yup.object().shape({
@@ -50,7 +45,7 @@ function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
               <Field className="form-check-input" type="checkbox" name="remember" />
               <label className="form-check-label text-white">Remember me</label>
             </div>
-            {badLoginAttempt && <div className="text-danger">Invalid login or password</div>}
+            {status==="error" && <div className="text-danger">Invalid login or password</div>}
             <Button className="btn-primary" type="submit">Log in</Button>
             <Button className="btn-secondary" onClick={() => history.push('/register')}>Register</Button>
           </Form>

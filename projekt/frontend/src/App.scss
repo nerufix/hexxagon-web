@@ -2,7 +2,7 @@
 $theme-colors: (
     "primary": #9c6012,
     "secondary": #30691d,
-    "info": teal,
+    "info": rgb(49, 128, 128),
     "danger": tomato,
     "dark": #3a3749
 );
@@ -21,7 +21,7 @@ $primary: #343434;
 $secondary: #f6f4f2;
 $bootstrap-default: #0d6efd;
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, .chatbox {
   overflow-wrap: anywhere;
 }
 
@@ -72,10 +72,23 @@ ul {
 }
 
 .panel {
-  min-width: 400px;
+  min-width: 550px;
   max-width: 900px;
   color: white;
   font-weight: 200;
+}
+
+.chatbox {
+  width: 300px;
+  font-weight: 200;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+form {
+  .chatbox ~ & {
+    width: 300px;  
+  }
 }
 
 .back-link {

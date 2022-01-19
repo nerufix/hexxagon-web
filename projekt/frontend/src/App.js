@@ -7,8 +7,8 @@ import {
 import ScrollToTop from './ui/ScrollToTop'
 import React, { useEffect } from 'react'
 import Mainpage from "./ui/Mainpage"
-import Dashboard from './ui/Dashboard';
 import Register from './ui/Register';
+import Room from './ui/Room';
 
 function App() {
 
@@ -16,11 +16,11 @@ function App() {
     <Router>
       <ScrollToTop />
       <Switch>
+        <Route path="/game/:id">
+          <Room />
+        </Route>
         <Route path="/register">
           <Register />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
         </Route>
         <Route path="/">
           <Mainpage />
