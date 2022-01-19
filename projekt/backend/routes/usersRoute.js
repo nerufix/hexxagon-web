@@ -9,7 +9,6 @@ const writeToJson = () => {
   fs.writeFile(__dirname+'/../data/users.json', JSON.stringify(users), 'utf8', () => {console.log('exported to json')});
 }
 
-//fs.writeFile('myjsonfile.json', JSON.stringify(data), 'utf8', () => {console.log('exported to json')});
 fs.readFile(__dirname+'/../data/users.json', (err,content) => {
   if(err) throw err;
   users = JSON.parse(content)
@@ -19,10 +18,10 @@ router.post('/login', (req, res) => {
   const credentials = req.body
   const query = users.find(el => 
     (el.login === credentials.login && el.password === credentials.password)
-    || (el.token && credentials.token === el.token.value && el.token.due > Date.now())
+    || (el.token && credentials.token === el.token.value && new Date(el.token.due) > new Date())
   )
   if (!query) {
-    res.status(418).send({})
+    res.status(418).send({}) //TEST!
   } else if (credentials.remember) {
     const token = {
       value: v4(),
@@ -42,13 +41,33 @@ router.post('/register', (req, res) => {
     users.push({
       login: credentials.login,
       password: credentials.password,
-      role: 'user'
+      role: 'user',
+      score: 0
     })
     writeToJson()
     res.send({})
   } else {
     res.status(418).send({})
   }
+})
+
+router.put('/score', (req, res) => {
+  const {player, score} = req.body
+  const query = users.findIndex(el => el.login === player)
+  if (!query || !player || !score) {
+    res.status(418).send()
+  } else {
+    users[query].score += parseInt(score) 
+    writeToJson()
+    res.send()
+  }
+})
+
+router.get('/scoreboard', (req, res) => {
+  const query = users.map(el => ({player: el.player, score: el.score})).sort((a,b) => {
+    return b.score-a.score
+  }).slice(0,5)
+  res.send(query)
 })
 
 module.exports = router;
