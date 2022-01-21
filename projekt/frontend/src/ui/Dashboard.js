@@ -5,6 +5,7 @@ import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory } from "react-router-dom"
 import { resetUser, requestMqtt, resetMqtt } from '../ducks/actions'
 import { getGamesList, postGame, joinGame } from '../ducks/operations'
+import AdminPanel from "./AdminPanel"
 const axios = require('axios');
 
 function Dashboard({ user, game, token, ...props }) {
@@ -83,9 +84,7 @@ function Dashboard({ user, game, token, ...props }) {
           </OverlayTrigger>
           {
             user.role === 'admin' && 
-            <Button variant="outline-primary" onClick={handleLogout}>
-              Admin panel
-            </Button>
+            <AdminPanel />
           }
           <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
         </div>

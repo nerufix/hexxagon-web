@@ -145,3 +145,72 @@ export const postMessage = (id, player, message) => createAction({
     }
   ]
 })
+
+export const getUsers = () => createAction({
+  endpoint: `http://localhost:5000/users`,
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {users: json}
+      },
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
+
+export const putAdmin = (admin, newAdmin) => createAction({
+  endpoint: `http://localhost:5000/users/admin`,
+  method: 'PUT',
+  body: JSON.stringify({admin: admin, newAdmin: newAdmin}),
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
+
+export const getLogs = (date='', data='') => createAction({
+  endpoint: `http://localhost:5000/users/logs?date=${date.slice(0,10)}&data=${data}`,
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return date || data ? {logs: json} : {latestLogs: json}
+      },
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
