@@ -1,5 +1,7 @@
 var mosca = require('mosca')
 
+var fs = require('fs')
+
 var settings = {
   port: 1883,
   http: {port: 3333, bundle: true, static: './'}  
@@ -24,11 +26,11 @@ server.on('published', (packet) => {
 })
 */
 server.subscribe('#', (topic, payload) => {
-  console.log('Published v2', topic, payload.topic); //payload.clientId, payload.tpic
+  const logStream = fs.createWriteStream(__dirname+'/data/log.txt', {flags: 'a'});
+  logStream.write(new Date().toISOString()+`: mqtt published on ${topic}, data: ${payload}\n`)
+  logStream.end()
   const pl = payload[0] === '{' ? JSON.parse(payload) : {}
-  console.log(pl)
   if (!pl.topic || !pl.clientId || !pl.topic.includes('chat')) {
-    console.log(topic)
   } else if (topic.includes('/subscribes')) {
     publish(pl.topic, JSON.stringify({
       date: Date.now(),
