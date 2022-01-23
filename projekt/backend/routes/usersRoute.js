@@ -55,6 +55,8 @@ router.post('/register', (req, res) => {
   }
 })
 
+//SCORE CRUD
+
 router.put('/score', (req, res) => {
   const {player, score} = req.body
   const query = users.findIndex(el => el.login === player)
