@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory } from "react-router-dom"
-import { resetUser, requestMqtt, resetMqtt } from '../ducks/actions'
+import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
 import { getGamesList, postGame, joinGame } from '../ducks/operations'
 import AdminPanel from "./AdminPanel"
 const axios = require('axios');
 
-function Dashboard({ user, game, token, ...props }) {
+function Dashboard({ user, game, token, games, client, ...props }) {
 
   const history = useHistory()
 
@@ -17,15 +17,19 @@ function Dashboard({ user, game, token, ...props }) {
   }, [token, user])
 
   useEffect(() => {
-    props.resetMqtt()
+    props.resetEntity('game')
+    if (game.id) {
+      client.unsubscribe('moves/'+game.id)
+      client.unsubscribe('chat/'+game.id)
+    }
     props.requestMqtt(user.login)
     props.getGamesList()
   }, [])
 
   const handleLogout = () => {
     props.client.end()
-    props.resetUser()
-    props.resetMqtt()
+    props.resetEntity('user')
+    props.resetEntity('mqtt')
     document.cookie = 'token=reset'
     history.push('/')
   }
@@ -89,8 +93,7 @@ function Dashboard({ user, game, token, ...props }) {
           <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
         </div>
         <div>
-          {props.mqttGames.map(el => getGameElement(el))}
-          {props.sqlGames.map(el => getGameElement(el))}
+          {games.map(el => getGameElement(el))}
         </div>
       </div>
     </div>
@@ -104,18 +107,16 @@ const mapStateToProps = (state) => {
     game: state.game,
     token: state.user.token,
     client: state.mqtt.client,
-    sqlGames: state.game.gamesList || [],
-    mqttGames: state.mqtt.gamesList || []
+    games: state.game.gamesList
   }
 }
 
 const mapDispatchToProps = {
-  resetUser,
   requestMqtt,
   getGamesList,
   postGame,
   joinGame,
-  resetMqtt
+  resetEntity
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

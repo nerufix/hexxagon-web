@@ -1,19 +1,14 @@
 import * as types from "./types";
 
 export const setBadLoginAttempt = (payload) => ({
-  type: types.SQL_SUCCESS,
+  type: types.OTHER,
   meta: 'user',
   payload: {badLoginAttempt: payload}
 })
 
-export const resetUser = () => ({
+export const resetEntity = (entity) => ({
   type: types.RESET,
-  meta: 'user'
-})
-
-export const resetMqtt = () => ({
-  type: types.RESET,
-  meta: 'mqtt'
+  meta: entity
 })
 
 export const requestMqtt = (login) => ({
@@ -36,10 +31,23 @@ export const mqttConnectionState = (client) => {
   }
 }
 
-export const mqttSetData = (topic, payload) => {
+export const updateGamesList = (payload) => {
   return {
-    type: types.MQTT_DATA,
-    meta: 'mqtt',
-    payload: { [topic]: payload }
+    type: types.GAMES_LIST,
+    payload: payload
+  }
+}
+
+export const updateChat = (payload) => {
+  return {
+    type: types.CHAT,
+    payload: payload
+  }
+}
+
+export const updateMove = (payload) => {
+  return {
+    type: types.MOVE,
+    payload: payload
   }
 }

@@ -3,30 +3,22 @@ import { useEffect, useRef  } from "react"
 import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
-import { resetUser, requestMqtt, mqttSetData } from '../ducks/actions'
+import { resetUser, requestMqtt } from '../ducks/actions'
 import { postMessage, joinGame } from '../ducks/operations'
+import ScrollableFeed from 'react-scrollable-feed'
+import Game from "./Game"
 const axios = require('axios');
 
 function Room({ id, user, game, client, chat, ...props }) {
 
   const history = useHistory()
-  const messagesEndRef = useRef(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
   useEffect(() => {
     props.joinGame(id, user.login)
     client.subscribe('chat/'+id)
+    
   }, [])
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [chat]);
-
   
-
   const handleChatSend = (values) => {
     props.postMessage(id, user.login, values.message)
     client.publish('chat/'+id, JSON.stringify({
@@ -38,8 +30,8 @@ function Room({ id, user, game, client, chat, ...props }) {
 
   const getChatMessage = (message) => {
     return (
-      <div className="p-1 text-white">
-        <span className="bg-dark text-white mx-1 p-1 rounded">
+      <div key={JSON.stringify(message)} className="p-1 text-white">
+        <span className="bg-info text-white mx-1 p-1 rounded">
           {new Date(message.date).toLocaleTimeString().slice(0,5)}
         </span>
         <span>{message.player+': '}</span>
@@ -49,11 +41,13 @@ function Room({ id, user, game, client, chat, ...props }) {
   }
 
   return (
-    <div className="d-flex justify-content-center flex-wrap">
+    <div className="d-flex justify-content-center align-items-center flex-wrap">
+      <Game />
       <div>
-        <div className="chatbox rounded bg-info">
-          {chat.map(el => getChatMessage(el))}
-          <div ref={messagesEndRef} />
+        <div className="chatbox rounded bg-dark">
+          <ScrollableFeed>
+            {chat.map(el => getChatMessage(el))}
+          </ScrollableFeed>
         </div>
         <Formik initialValues={{message: ""}} onSubmit={(values) => handleChatSend(values)}>
           {() => (
@@ -74,14 +68,13 @@ const mapStateToProps = (state, props) => {
     game: state.game,
     user: state.user,
     id: props.match.params.id,
-    chat: state.game.chat ? [...state.game.chat, ...state.mqtt.chat].slice(-30) : []
+    chat: state.game.chat.slice(-30)
   }
 }
 
 const mapDispatchToProps = {
   postMessage,
-  joinGame,
-  mqttSetData
+  joinGame
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Room))

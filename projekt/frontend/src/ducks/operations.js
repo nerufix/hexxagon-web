@@ -12,7 +12,7 @@ export const postLogin = (cred) => createAction({
       meta: 'user'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.OTHER,
       payload: async (action, state, res) => {
         const json = await res.json()
         return json
@@ -37,7 +37,7 @@ export const postRegister = (cred) => createAction({
       meta: 'user'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.OTHER,
       payload: async (action, state, res) => {
         const json = await res.json()
         return json
@@ -61,10 +61,11 @@ export const getGamesList = () => createAction({
       meta: 'game'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.GAMES_LIST,
       payload: async (action, state, res) => {
         const json = await res.json()
-        return {gamesList: json}
+        console.log(json)
+        return json
       },
       meta: 'game'
     },
@@ -87,10 +88,6 @@ export const postGame = (name, player) => createAction({
     },
     {
       type: types.SQL_SUCCESS,
-      payload: async (action, state, res) => {
-        const json = await res.json()
-        return json
-      },
       meta: 'game'
     },
     {
@@ -111,7 +108,7 @@ export const joinGame = (id, player) => createAction({
       meta: 'game'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.GAME,
       payload: async (action, state, res) => {
         const json = await res.json()
         return json
@@ -156,7 +153,7 @@ export const getUsers = () => createAction({
       meta: 'user'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.OTHER,
       payload: async (action, state, res) => {
         const json = await res.json()
         return {users: json}
@@ -201,7 +198,7 @@ export const getLogs = (date='', data='') => createAction({
       meta: 'user'
     },
     {
-      type: types.SQL_SUCCESS,
+      type: types.OTHER,
       payload: async (action, state, res) => {
         const json = await res.json()
         return date || data ? {logs: json} : {latestLogs: json}
@@ -211,6 +208,27 @@ export const getLogs = (date='', data='') => createAction({
     {
       type: types.SQL_FAILURE,
       meta: 'user'
+    }
+  ]
+})
+
+export const postMove = (id, player, move) => createAction({
+  endpoint: `http://localhost:5000/games/${id}`,
+  method: 'POST',
+  body: JSON.stringify({player: player, move: move}),
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'game'
     }
   ]
 })

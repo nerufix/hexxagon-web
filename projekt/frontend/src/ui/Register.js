@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import * as yup from "yup"
 import { connect } from 'react-redux'
 import { postRegister } from '../ducks/operations'
+import hexagon from './img/hexagon.svg'
+import title from './img/title.png'
 import sha256 from 'crypto-js/sha256';
 
 function Register({ postRegister }) {
@@ -28,6 +30,8 @@ function Register({ postRegister }) {
 
   return (
     <div className="main">
+      <img src={title} className='title' />
+      <img src={hexagon} className='bg-middle bg-hexagon' />
       <Formik
         initialValues={ {
           login: "",
@@ -49,6 +53,7 @@ function Register({ postRegister }) {
             <Field className={"form-control"+(errors.password ? " error" : "")} type="password" name="password" placeholder='Password' />
             <div className="text-danger">{errors.password}</div>
             <Button className="btn-secondary" type="submit">Register</Button>
+            <Button className="btn-primary" onClick={history.goBack}>Go back</Button>
           </Form>
         )}
       </Formik>

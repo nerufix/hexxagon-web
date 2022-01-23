@@ -1,4 +1,4 @@
-import { mqttConnectionInit, mqttConnectionState, mqttSetData } from './actions';
+import { updateChat, updateGamesList, updateMove, mqttConnectionInit, mqttConnectionState } from './actions';
 import { connect } from "mqtt/dist/mqtt" 
 import { MQTT_REQUEST } from './types';
 
@@ -13,15 +13,13 @@ export const mqttMiddleware = store => next => action => {
 
     client.on('message', ((topic, payload) => {
       console.log('received message', payload.toString(), 'on topic', topic)
-      const state = store.getState().mqtt
       const data = JSON.parse(payload.toString())
       if (topic==='gamesList') {
-        (!store.gamesList || !store.gamesList.includes(data)) && store.dispatch(mqttSetData('gamesList', [
-          data,
-          ...state.gamesList
-        ]))
+        (!store.gamesList || !store.gamesList.includes(data)) && store.dispatch(updateGamesList(data))
       } else if (topic && topic.includes('chat/')) {
-        store.dispatch(mqttSetData('chat', [...state.chat, data]))
+        store.dispatch(updateChat(data))
+      } else if (topic && topic.includes('moves/')) {
+        store.dispatch(updateMove(data))
       } 
     }));
 

@@ -6,6 +6,8 @@ import * as yup from "yup"
 import { connect } from 'react-redux'
 import { postLogin } from '../ducks/operations'
 import { setBadLoginAttempt } from '../ducks/actions'
+import hexagon from './img/hexagon.svg'
+import title from './img/title.png'
 import sha256 from 'crypto-js/sha256';
 
 function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
@@ -23,6 +25,8 @@ function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
 
   return (
     <div className="main">
+      <img src={title} className='title' />
+      <img src={hexagon} className='bg-middle bg-hexagon' />
       <Formik
         initialValues={ {
           login: "",
