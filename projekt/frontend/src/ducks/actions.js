@@ -51,3 +51,18 @@ export const updateMove = (payload) => {
     payload: payload
   }
 }
+
+export const updateSecondPlayer = (payload) => {
+  return {
+    type: types.SECOND_PLAYER,
+    payload: payload
+  }
+}
+
+export const setWin = (payload) => {
+  return {
+    type: types.OTHER,
+    meta: 'game',
+    payload: payload
+  }
+}

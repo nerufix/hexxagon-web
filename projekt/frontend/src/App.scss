@@ -3,8 +3,9 @@ $theme-colors: (
     "primary": #9c6012,
     "secondary": #30691d,
     "info": rgb(49, 128, 128),
-    "danger": tomato,
-    "dark": #3a3749
+    "danger": rgb(199, 18, 18),
+    "dark": #3a3749,
+    "light": #693ebe
 );
 
 $form-check-input-checked-bg-color: #30691d;
@@ -81,11 +82,18 @@ ul {
   font-weight: 200;
 }
 
+.plot {
+  color: white;
+  font-weight: 200;
+  width: 400px;
+}
+
+
 .chatbox {
   width: 300px;
   font-weight: 200;
   height: 450px;
-  overflow-y: scroll;
+  //overflow-y: scroll;
 }
 
 .logbox {

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
-import { postMove } from '../ducks/operations'
+import { postMove, putScore, deleteGame } from '../ducks/operations'
 import { HexGrid, Layout, Hexagon, Text, Pattern, Path, Hex, GridGenerator } from 'react-hexgrid';
 import { selectPlayerColor } from '../ducks/selectors'
 import board from './img/board.png'
@@ -19,6 +19,14 @@ function Game({ id, user, game, client, ...props }) {
   useEffect(() => {
     client.subscribe('moves/'+id)
   }, [])
+
+  useEffect(() => {
+    if (game.end && game.players.filter((el,i) => i!==game.turnCount%2)[0] === user.login ) {
+      props.putScore(game.players[0], game.redScore)
+      props.putScore(game.players[1], game.blueScore)
+      props.deleteGame(game.id)
+    }
+  }, [game.end])
   
   const blackHexagons = [
     {q: 1, r: 0, s: -1},
@@ -100,6 +108,13 @@ function Game({ id, user, game, client, ...props }) {
     }
   }
 
+  const getEndMessage = () => {
+    const [index, score] = game.redScore > game.blueScore ? [0, game.redScore] : [1, game.blueScore]
+    return game.redScore===game.blueScore 
+    ? "It's a tie!" 
+    : `${game.players[index]} wins with a score of ${score}!` 
+  }
+
   const rubyStyle = {
     stroke: 'none',
     fillOpacity: 1
@@ -109,36 +124,42 @@ function Game({ id, user, game, client, ...props }) {
 
   return !game.board ? (<Loading />) : (
     <div className="p-3">
-      <div className="text-white hud d-flex">
-        <div className="hexagon-red" />
-        <span className="mx-1">{game.board.red.length}</span>
-        <div className="mx-2" />
-        <div className="hexagon-blue" />
-        <span className="mx-1">{game.board.blue.length}</span>
-      </div>
-      <div className="game d-flex justify-content-center">
-        <HexGrid width={gameSize} height={gameSize}>
-          <Layout size={{ x: 6.45, y: 5.8 }} flat={true} spacing={1.1} origin={{ x: 0, y: 0 }}>
-          { 
-            game.board.blue.map((hex, i) => 
-            <Hexagon cellStyle={rubyStyle} fill="blue" key={i} q={hex.q} r={hex.r} s={hex.s}
-             onClick={() => handleSelectClick(hex)} />)
-          }
-          { 
-            game.board.red.map((hex, i) => 
-            <Hexagon cellStyle={rubyStyle} fill="red" key={i} q={hex.q} r={hex.r} s={hex.s}
-             onClick={() => handleSelectClick(hex)} />)
-          }
-          { 
-            hexagons.filter(el => !includesHex(el, game.board.red) && !includesHex(el, game.board.blue)).map((hex, i) => 
-            <Hexagon cellStyle={getHexStyle(hex)} key={i} q={hex.q} r={hex.r} s={hex.s} onClick={() => movePossible && handleMoveClick(hex)} />)
-          }
-          </Layout>
-          <Pattern id="red" link={red} size={{x: 6.5, y: 5}} />
-          <Pattern id="blue" link={blue} size={{x: 6.5, y: 5}} />
-        </HexGrid>
-      </div>
-      <div className="d-flex flex-row justify-content-center text-white h3">It's {game.players[game.turnCount%2]}'s turn.</div>
+      {
+      game.players.length<2 ? (<div className="text-white h3"><Loading />Wait for another player to join...</div>) :
+      (<>
+        <div className="text-white hud d-flex">
+          <div className="hexagon-red" />
+          <span className="mx-1">{game.board.red.length}</span>
+          <div className="mx-2" />
+          <div className="hexagon-blue" />
+          <span className="mx-1">{game.board.blue.length}</span>
+        </div>
+        <div className="game d-flex justify-content-center">
+          <HexGrid width={gameSize} height={gameSize}>
+            <Layout size={{ x: 6.45, y: 5.8 }} flat={true} spacing={1.1} origin={{ x: 0, y: 0 }}>
+            { 
+              game.board.blue.map((hex, i) => 
+              <Hexagon cellStyle={rubyStyle} fill="blue" key={i} q={hex.q} r={hex.r} s={hex.s}
+              onClick={() => handleSelectClick(hex)} />)
+            }
+            { 
+              game.board.red.map((hex, i) => 
+              <Hexagon cellStyle={rubyStyle} fill="red" key={i} q={hex.q} r={hex.r} s={hex.s}
+              onClick={() => handleSelectClick(hex)} />)
+            }
+            { 
+              hexagons.filter(el => !includesHex(el, game.board.red) && !includesHex(el, game.board.blue)).map((hex, i) => 
+              <Hexagon cellStyle={getHexStyle(hex)} key={i} q={hex.q} r={hex.r} s={hex.s} onClick={() => movePossible && handleMoveClick(hex)} />)
+            }
+            </Layout>
+            <Pattern id="red" link={red} size={{x: 6.5, y: 5}} />
+            <Pattern id="blue" link={blue} size={{x: 6.5, y: 5}} />
+          </HexGrid>
+        </div>
+        <div className="d-flex flex-row justify-content-center text-white h3">
+          {game.end ? getEndMessage() : `It's ${game.players[game.turnCount%2]}'s turn.`}
+        </div>
+      </>)} 
     </div>
   )
 }
@@ -154,23 +175,9 @@ const mapStateToProps = (state, props) => {
 }
 
 const mapDispatchToProps = {
-  postMove
+  postMove,
+  putScore,
+  deleteGame
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game))
-
-
-/*
-<div className="d-inline">
-          <img src={hexagon} width="50px" class="hexagon img-fluid"/>
-          <img src={hexagon} width="50px" class=" img-fluid"/>
-          <img src={hexagon} width="50px" class="hexagon img-fluid"/>
-          <img src={hexagon} width="50px" class=" img-fluid"/>
-          <img src={hexagon} width="50px" class="hexagon img-fluid"/>
-          <img src={hexagon} width="50px" class=" img-fluid"/>
-        </div>
-        <div className="w-100" />
-        <div className="d-inline">
-
-        </div>
-        */

@@ -4,8 +4,10 @@ import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory } from "react-router-dom"
 import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
-import { getGamesList, postGame, joinGame } from '../ducks/operations'
+import { getGamesList, postGame, joinGame, deleteGame } from '../ducks/operations'
 import AdminPanel from "./AdminPanel"
+import Scoreboard from "./Scoreboard"
+import Loading from "./Loading"
 const axios = require('axios');
 
 function Dashboard({ user, game, token, games, client, ...props }) {
@@ -37,6 +39,10 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const handleJoinClick = (id) => {
     props.joinGame(id, user.login)
     history.push('/game/'+id)
+  }
+
+  const handleDeleteClick = (id) => {
+    props.deleteGame(id)
   }
 
   const handleGameSubmit = (values) => {
@@ -73,14 +79,30 @@ function Dashboard({ user, game, token, games, client, ...props }) {
         </div>
         <Button onClick={() => handleJoinClick(game.id)}>
           {game.players.length===1 || game.players.includes(user.login) ? 'Join' : 'Observe'}
-          </Button>
+        </Button>
+        {
+          user.role==='admin' && (
+            <>
+              <Button variant="danger" onClick={() => handleDeleteClick(game.id)}>
+                Delete
+              </Button>
+              <Button variant="info" onClick={() => handleJoinClick(game.id)}>
+                Join as red
+              </Button>
+              <Button variant="info" onClick={() => handleJoinClick(game.id)}>
+                Join as blue
+              </Button>
+            </>
+          )
+        }
+        
       </div>
     )
   }
 
   return (
-    <div className="d-flex justify-content-center">
-      <div className="m-3 p-2 panel bg-dark rounded">
+    <div className="d-flex flex-wrap justify-content-center">
+      <div className="m-2 p-2 panel bg-dark rounded">
         <div className="d-flex navbar justify-content-between">
           <div>Hello, {user.login}</div>
           <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
@@ -96,6 +118,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
           {games.map(el => getGameElement(el))}
         </div>
       </div>
+      <Scoreboard />
     </div>
   )
 }
@@ -116,7 +139,8 @@ const mapDispatchToProps = {
   getGamesList,
   postGame,
   joinGame,
-  resetEntity
+  resetEntity,
+  deleteGame
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

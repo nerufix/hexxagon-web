@@ -4,7 +4,9 @@ const loading = 'loading'
 const error = 'error'
 
 const defaultState = {
-  user: {},
+  user: {
+    scoreboard: []
+  },
   game: {
     gamesList: [],
     chat: []
@@ -67,6 +69,16 @@ export const reducer = (state = defaultState, action) => {
           ]
         }
       }}
+    case types.SECOND_PLAYER:
+      return {...state, game: {
+        ...state.game,
+        players: [...state.game.players, action.payload]
+      }} 
+    case types.SCOREBOARD:
+      return {...state, user: {
+        ...state.user,
+        scoreboard: [...state.user.scoreboard, action.payload]
+      }} 
     case types.OTHER:
       //const payload = Array.isArray(action.payload) ? action.payload : [action.payload]
       return {...state, [action.meta]: {

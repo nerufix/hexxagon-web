@@ -11,7 +11,9 @@ export const GAMES_LIST = 'GAMES_LIST'
 export const CHAT = 'CHAT'
 export const GAME = 'GAME'
 export const MOVE = 'MOVE'
+export const SECOND_PLAYER = 'SECOND_PLAYER'
 export const OTHER = 'OTHER'
+export const SCOREBOARD = 'SCOREBOARD'
 
 
 export const RESET = 'RESET'

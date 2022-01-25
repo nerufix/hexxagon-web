@@ -52,7 +52,7 @@ export const postRegister = (cred) => createAction({
 })
 
 export const getGamesList = () => createAction({
-  endpoint: `http://localhost:5000/games/list/`,
+  endpoint: `http://localhost:5000/games/`,
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -61,11 +61,10 @@ export const getGamesList = () => createAction({
       meta: 'game'
     },
     {
-      type: types.GAMES_LIST,
+      type: types.OTHER,
       payload: async (action, state, res) => {
         const json = await res.json()
-        console.log(json)
-        return json
+        return {gamesList: json}
       },
       meta: 'game'
     },
@@ -77,7 +76,7 @@ export const getGamesList = () => createAction({
 })
 
 export const postGame = (name, player) => createAction({
-  endpoint: `http://localhost:5000/games/create`,
+  endpoint: `http://localhost:5000/games`,
   method: 'POST',
   body: JSON.stringify({name, player}),
   headers: { 'Content-Type': 'application/json' },
@@ -229,6 +228,75 @@ export const postMove = (id, player, move) => createAction({
     {
       type: types.SQL_FAILURE,
       meta: 'game'
+    }
+  ]
+})
+
+export const getScoreboard = () => createAction({
+  endpoint: `http://localhost:5000/users/scoreboard/`,
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {scoreboard: json}
+      },
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
+
+export const deleteGame = (id) => createAction({
+  endpoint: `http://localhost:5000/games/${id}`,
+  method: 'DELETE',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'game'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {gamesList: json}
+      },
+      meta: 'game'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'game'
+    }
+  ]
+})
+
+export const putScore = (player, score) => createAction({
+  endpoint: `http://localhost:5000/users/score`,
+  body: JSON.stringify({player: player, score: score}),
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.OTHER,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
     }
   ]
 })
