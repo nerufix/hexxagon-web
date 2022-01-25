@@ -32,9 +32,9 @@ router.post('/login', (req, res) => {
     }
     users[users.findIndex(el => el === query)].token = token
     writeToJson()
-    res.send({ login: query.login, role: query.role, token: token.value })
+    res.send({ login: query.login, score: query.score, role: query.role, token: token.value })
   } else {
-    res.send({ login: query.login, role: query.role })
+    res.send({ login: query.login, score: query.score, role: query.role })
   }
 })
 
@@ -55,24 +55,24 @@ router.post('/register', (req, res) => {
   }
 })
 
-//SCORE CRUD
+//SCORE
 
 router.put('/score', (req, res) => {
   const {player, score} = req.body
   const query = users.findIndex(el => el.login === player)
-  if (!query || !player || !score) {
+  if (query<0 || !player || !score) {
     res.status(418).send()
   } else {
     users[query].score += parseInt(score) 
     writeToJson()
-    res.send()
+    res.send({score: users[query].score})
   }
 })
 
 router.get('/scoreboard', (req, res) => {
-  const query = users.map(el => ({player: el.player, score: el.score})).sort((a,b) => {
+  const query = users.map(el => ({player: el.login, score: el.score})).sort((a,b) => {
     return b.score-a.score
-  }).slice(0,5)
+  }).slice(0,10)
   res.send(query)
 })
 

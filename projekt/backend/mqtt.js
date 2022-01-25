@@ -30,18 +30,23 @@ server.subscribe('#', (topic, payload) => {
   logStream.write(new Date().toISOString()+`: mqtt published on ${topic}, data: ${payload}\n`)
   logStream.end()
   const pl = payload[0] === '{' ? JSON.parse(payload) : {}
-  if (!pl.topic || !pl.clientId || !pl.topic.includes('chat')) {
-  } else if (topic.includes('/subscribes')) {
+  if (!pl.topic || !pl.clientId) {
+
+  } else if (topic.includes('/subscribes') && pl.topic.includes('chat')) {
     publish(pl.topic, JSON.stringify({
       date: Date.now(),
       player: pl.clientId.split('_0.')[0],
       message: 'connected to the chat'
     }))
-  } else if (topic.includes('/unsubscribes')) {
+  } else if (topic.includes('/unsubscribes') && pl.topic.includes('chat')) {
     publish(pl.topic, JSON.stringify({
       date: Date.now(),
       player: pl.clientId.split('_0.')[0],
       message: 'left the chat'
+    }))
+  } else if (topic.includes('/subscribes') && pl.topic.includes('moves')) {
+    publish(pl.topic, JSON.stringify({
+      player: pl.clientId.split('_0.')[0],
     }))
   }
 });

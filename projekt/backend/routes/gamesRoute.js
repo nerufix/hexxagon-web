@@ -29,7 +29,7 @@ fs.readFile(__dirname+'/../data/games.json', (err,content) => {
 
 //game create crud
 
-router.post('/create', (req, res) => {
+router.post('/', (req, res) => {
   const {name, player} = req.body
   if (!player) {
     res.status(418).send()
@@ -61,7 +61,7 @@ router.put('/join/:id', (req, res) => {
   }
 })
 
-router.get('/list', (req, res) => {
+router.get('/', (req, res) => {
   res.send(games.map(el => ({
     id: el.id,
     name: el.name,
@@ -69,9 +69,18 @@ router.get('/list', (req, res) => {
   })))
 })
 
-//delete after win
+router.delete('/:id', (req, res) => {
+  games = games.filter(el => el.id!==req.params.id)
+  writeToJson()
+  res.send(games.map(el => ({
+    id: el.id,
+    name: el.name,
+    players: el.players
+  })))
+})
 
 
+//chat
 
 router.put('/chatMessage', (req, res) => {
   const {id, player, message} = req.body
