@@ -3,20 +3,19 @@ import { useEffect, useRef  } from "react"
 import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
-import { resetUser, requestMqtt } from '../ducks/actions'
+import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
 import { postMessage, joinGame } from '../ducks/operations'
 import ScrollableFeed from 'react-scrollable-feed'
 import Game from "./Game"
 const axios = require('axios');
 
-function Room({ id, user, game, client, chat, ...props }) {
+function Room({ id, user, game, client, es, chat, ...props }) {
 
   const history = useHistory()
 
   useEffect(() => {
     props.joinGame(id, user.login)
     client.subscribe('chat/'+id)
-    
   }, [])
   
   const handleChatSend = (values) => {
@@ -68,6 +67,7 @@ const mapStateToProps = (state, props) => {
     game: state.game,
     user: state.user,
     id: props.match.params.id,
+    es: state.esrc.es,
     chat: state.game.chat.slice(-30)
   }
 }

@@ -76,7 +76,7 @@ export const getGamesList = () => createAction({
 })
 
 export const postGame = (name, player) => createAction({
-  endpoint: `http://localhost:5000/games`,
+  endpoint: `http://localhost:5000/games/create`,
   method: 'POST',
   body: JSON.stringify({name, player}),
   headers: { 'Content-Type': 'application/json' },
@@ -212,7 +212,7 @@ export const getLogs = (date='', data='') => createAction({
 })
 
 export const postMove = (id, player, move) => createAction({
-  endpoint: `http://localhost:5000/games/${id}`,
+  endpoint: `http://localhost:5000/games/move/${id}`,
   method: 'POST',
   body: JSON.stringify({player: player, move: move}),
   headers: { 'Content-Type': 'application/json' },
@@ -292,6 +292,90 @@ export const putScore = (player, score) => createAction({
     },
     {
       type: types.OTHER,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
+
+export const putMove = (id, hex, oldColor, newColor) => createAction({
+  endpoint: `http://localhost:5000/games/move/${id}`,
+  body: JSON.stringify({hex, oldColor, newColor}),
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'game'
+    }
+  ]
+})
+
+export const deleteMove = (id, hex, color) => createAction({
+  endpoint: `http://localhost:5000/games/move/${id}`,
+  body: JSON.stringify({hex, color}),
+  method: 'DELETE',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      meta: 'game'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'game'
+    }
+  ]
+})
+
+export const putUser = (login, password, newPassword) => createAction({
+  endpoint: `http://localhost:5000/users`,
+  body: JSON.stringify({login, password, newPassword}),
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_SUCCESS,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'user'
+    }
+  ]
+})
+
+export const deleteUser = (login, password) => createAction({
+  endpoint: `http://localhost:5000/users`,
+  body: JSON.stringify({login, password}),
+  method: 'DELETE',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'user'
+    },
+    {
+      type: types.SQL_SUCCESS,
       meta: 'user'
     },
     {

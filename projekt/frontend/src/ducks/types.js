@@ -14,6 +14,8 @@ export const MOVE = 'MOVE'
 export const SECOND_PLAYER = 'SECOND_PLAYER'
 export const OTHER = 'OTHER'
 export const SCOREBOARD = 'SCOREBOARD'
+export const ES_CONNECTED = 'ES_CONNECTED'
+export const ES_AD_URL = 'ES_AD_URL'
 
 
 export const RESET = 'RESET'

@@ -1,24 +1,26 @@
 import {Button} from 'react-bootstrap';
 import { Field, Form, Formik } from "formik"
 import { useHistory } from 'react-router-dom';
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import * as yup from "yup"
 import { connect } from 'react-redux'
 import { postRegister } from '../ducks/operations'
 import hexagon from './img/hexagon.svg'
 import title from './img/title.png'
 import sha256 from 'crypto-js/sha256';
+const axios = require('axios');
 
-function Register({ postRegister }) {
+function Register({ user, status, ...props }) {
 
   const history = useHistory()
 
-  
-
   const handleSubmit = (values) => {
-    postRegister({...values, password: sha256(values.password).toString()}).then((res) => {
-      res.error ? alert('Operation failed') : alert('Registered successfully, you may now log in')
-      history.push('/')
+    props.postRegister({...values, password: sha256(values.password).toString()}).then((res) => {
+      if (!res.error) {
+        alert('Registered successfully, you may now log in')
+        //res.payload.response.message
+        history.push('/')
+      }
     })
   }
 
@@ -48,8 +50,9 @@ function Register({ postRegister }) {
           <Form className="px-2 py-3 middle bg-dark">
             <Field className={"form-control"+(errors.email ? " error" : "")} name="email" placeholder='Email' />
             <div className="text-danger">{errors.email}</div>
-            <Field className={"form-control"+(errors.login ? " error" : "")} name="login" placeholder='Login' autoComplete="off" />
+            <Field className={"form-control"+(status || errors.login ? " error" : "")} name="login" placeholder='Login' autoComplete="off" />
             <div className="text-danger">{errors.login}</div>
+            <div className="text-danger">{status}</div>
             <Field className={"form-control"+(errors.password ? " error" : "")} type="password" name="password" placeholder='Password' />
             <div className="text-danger">{errors.password}</div>
             <Button className="btn-secondary" type="submit">Register</Button>
@@ -63,7 +66,9 @@ function Register({ postRegister }) {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.user.token
+    token: state.user.token,
+    user: state.user,
+    status: state.user.status
   }
 }
 

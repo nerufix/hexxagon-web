@@ -11,7 +11,8 @@ const defaultState = {
     gamesList: [],
     chat: []
   },
-  mqtt: {}
+  mqtt: {},
+  esrc: {}
 } 
 
 export const reducer = (state = defaultState, action) => {
@@ -24,7 +25,12 @@ export const reducer = (state = defaultState, action) => {
     case types.SQL_FAILURE:
       return {...state, [action.meta]: {
         ...state[action.meta],
-        status: error
+        status: action.payload.response?.message
+      }}
+    case types.SQL_SUCCESS:
+      return {...state, [action.meta]: {
+        ...state[action.meta],
+        status: ''
       }}
     case types.MQTT_INIT:
       return {...state, [action.meta]: {
@@ -79,11 +85,22 @@ export const reducer = (state = defaultState, action) => {
         ...state.user,
         scoreboard: [...state.user.scoreboard, action.payload]
       }} 
+    case types.ES_CONNECTED:
+      return {...state, esrc: {
+        ...state.esrc,
+        es: action.payload
+      }} 
+    case types.ES_AD_URL:
+      return {...state, esrc: {
+        ...state.esrc,
+        adUrl: action.payload
+      }} 
     case types.OTHER:
       //const payload = Array.isArray(action.payload) ? action.payload : [action.payload]
       return {...state, [action.meta]: {
         ...state[action.meta],
-        ...action.payload
+        ...action.payload,
+        status: ''
       }} 
     case types.RESET:
       return {...state, [action.meta]: defaultState[action.meta]}

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Field, Form, Formik } from "formik"
 import { Button, Popover, OverlayTrigger } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
-import { postMove, putScore, deleteGame } from '../ducks/operations'
+import { postMove, putScore, deleteGame, putMove, deleteMove } from '../ducks/operations'
 import { HexGrid, Layout, Hexagon, Text, Pattern, Path, Hex, GridGenerator } from 'react-hexgrid';
 import { selectPlayerColor } from '../ducks/selectors'
 import board from './img/board.png'
@@ -42,6 +42,7 @@ function Game({ id, user, game, client, ...props }) {
 
   const [atSelect, setAtSelect] = useState({})
   const [movePossible, setMovePossible] = useState(false)
+  const [adminTweak, setAdminTweak] = useState('')
 
   
   const isOneTileApart = (hex1, hex2) => {
@@ -82,9 +83,35 @@ function Game({ id, user, game, client, ...props }) {
     setAtSelect({})
   }
 
+  const handleDeleteClick = (hex) => {
+    const hexColor = ['red', 'blue'].find(color => includesHex(hex, game.board[color]))
+    props.deleteMove(game.id, hex, hexColor)
+    client.publish('moves/'+id, JSON.stringify({
+      turnCount: game.turnCount, 
+      color: hexColor, 
+      from: hex,
+      to: []
+    }))
+  }
+
+  const handleSwapClick = (hex) => {
+    const oldColor = ['red', 'blue'].find(color => includesHex(hex, game.board[color]))
+    const newColor = oldColor === 'red' ? 'blue' : 'red'
+    props.putMove(game.id, hex, oldColor, newColor)
+    client.publish('moves/'+id, JSON.stringify({
+      turnCount: game.turnCount, 
+      color: newColor, 
+      to: [hex]
+    }))
+  }
+
 
   const handleSelectClick = (hex) => {
-    if (game.players[game.turnCount%2] === user.login 
+    if (adminTweak==='delete') {
+      handleDeleteClick(hex)
+    } else if (adminTweak==='swap') {
+      handleSwapClick(hex)
+    } else if (game.players[game.turnCount%2] === user.login 
     && includesHex(hex, game.board[props.playerColor])) {
       setAtSelect(hex)
       setMovePossible(true)
@@ -156,8 +183,24 @@ function Game({ id, user, game, client, ...props }) {
             <Pattern id="blue" link={blue} size={{x: 6.5, y: 5}} />
           </HexGrid>
         </div>
-        <div className="d-flex flex-row justify-content-center text-white h3">
-          {game.end ? getEndMessage() : `It's ${game.players[game.turnCount%2]}'s turn.`}
+        <div className="mt-3 bg-dark d-flex flex-wrap justify-content-center text-white">
+          <h3>{game.end ? getEndMessage() : `It's ${game.players[game.turnCount%2]}'s turn.`}</h3>
+          <div className="break" />
+          <div class="m-2 rounded h6">
+            <div className="mid">Admin tweaks</div>
+            <div>
+              <input className="form-check-input" name="tweaks" type="radio" value="" onChange={(e) => setAdminTweak(e.target.value)} checked={adminTweak===''} />
+              None
+            </div>
+            <div>
+              <input className="form-check-input" name="tweaks" type="radio" value="delete" onChange={(e) => setAdminTweak(e.target.value)} />
+              Delete tile
+            </div>
+            <div>
+              <input className="form-check-input" name="tweaks" type="radio" value="swap" onChange={(e) => setAdminTweak(e.target.value)} />
+              Swap tile's color
+            </div>
+           </div>
         </div>
       </>)} 
     </div>
@@ -177,7 +220,9 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = {
   postMove,
   putScore,
-  deleteGame
+  deleteGame,
+  putMove,
+  deleteMove
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game))

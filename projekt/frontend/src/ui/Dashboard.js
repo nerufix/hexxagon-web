@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom"
 import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
 import { getGamesList, postGame, joinGame, deleteGame } from '../ducks/operations'
 import AdminPanel from "./AdminPanel"
+import UserPanel from "./UserPanel"
 import Scoreboard from "./Scoreboard"
 import Loading from "./Loading"
 const axios = require('axios');
@@ -29,7 +30,6 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   }, [])
 
   const handleLogout = () => {
-    props.client.end()
     props.resetEntity('user')
     props.resetEntity('mqtt')
     document.cookie = 'token=reset'
@@ -48,7 +48,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const handleGameSubmit = (values) => {
     //props.postGame(values.name, user.login)
     axios.post('http://localhost:5000/games/create', {name: values.name, player: user.login}).then((res) => {
-      props.client.publish('gamesList', JSON.stringify(res.data))
+      client.publish('gamesList', JSON.stringify(res.data))
       history.push('/game/'+res.data.id)
     })
   }
@@ -71,9 +71,9 @@ function Dashboard({ user, game, token, games, client, ...props }) {
 
   const getGameElement = (game) => {
     return (
-      <div className="m-2 p-2 bg-secondary rounded d-flex justify-content-between flex-wrap">
-        <div>
-          <h5 className="flex-grow align-self-center">{game.name}</h5>
+      <div className="m-2 p-2 bg-secondary rounded d-flex flex-wrap">
+        <div className="left">
+          <h5>{game.name}</h5>
           <div className="break"></div>
           <div>players: {game.players.join(', ')}</div>
         </div>
@@ -82,17 +82,9 @@ function Dashboard({ user, game, token, games, client, ...props }) {
         </Button>
         {
           user.role==='admin' && (
-            <>
-              <Button variant="danger" onClick={() => handleDeleteClick(game.id)}>
-                Delete
-              </Button>
-              <Button variant="info" onClick={() => handleJoinClick(game.id)}>
-                Join as red
-              </Button>
-              <Button variant="info" onClick={() => handleJoinClick(game.id)}>
-                Join as blue
-              </Button>
-            </>
+            <Button variant="danger" onClick={() => handleDeleteClick(game.id)}>
+              Delete
+            </Button>
           )
         }
         
@@ -112,13 +104,20 @@ function Dashboard({ user, game, token, games, client, ...props }) {
             user.role === 'admin' && 
             <AdminPanel />
           }
+          <UserPanel />
           <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
         </div>
         <div>
           {games.map(el => getGameElement(el))}
         </div>
       </div>
-      <Scoreboard />
+      <div>
+        <Scoreboard />
+        <div className="ad m-2 p-2 bg-dark rounded d-flex justify-content-center align-center">
+          <span className="px-1 text-white bg-primary rounded x-sign">&times;</span>
+          <img src={props.adUrl} alt="A message from our sponsor will soon appear." />
+        </div>
+      </div>
     </div>
   )
 }
@@ -130,7 +129,8 @@ const mapStateToProps = (state) => {
     game: state.game,
     token: state.user.token,
     client: state.mqtt.client,
-    games: state.game.gamesList
+    games: state.game.gamesList,
+    adUrl: state.esrc.adUrl
   }
 }
 

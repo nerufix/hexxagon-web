@@ -31,6 +31,22 @@ export const mqttConnectionState = (client) => {
   }
 }
 
+export const esrcConnectionState = (client) => {
+  return {
+    type: types.ES_CONNECTED,
+    meta: 'esrc',
+    payload: client
+  }
+}
+
+export const setAdUrl = (ad) => {
+  return {
+    type: types.ES_AD_URL,
+    meta: 'esrc',
+    payload: ad
+  }
+}
+
 export const updateGamesList = (payload) => {
   return {
     type: types.GAMES_LIST,

@@ -5,12 +5,11 @@ import { useEffect } from 'react'
 import * as yup from "yup"
 import { connect } from 'react-redux'
 import { postLogin } from '../ducks/operations'
-import { setBadLoginAttempt } from '../ducks/actions'
 import hexagon from './img/hexagon.svg'
 import title from './img/title.png'
 import sha256 from 'crypto-js/sha256';
 
-function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
+function Login({ postLogin, status }) {
 
   const history = useHistory()
   
@@ -41,15 +40,15 @@ function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
       >
         {({ errors }) => (
           <Form className="px-2 py-3 rounded middle bg-dark">
-            <Field className={"form-control"+(errors.login ? " error" : "")} name="login" placeholder='Login' autoComplete="off" />
+            <Field className={"form-control"+(status || errors.login ? " error" : "")} name="login" placeholder='Login' autoComplete="off" />
             <div className="text-danger">{errors.login}</div>
-            <Field className={"form-control"+(errors.password ? " error" : "")} type="password" name="password" placeholder='Password' />
+            <Field className={"form-control"+(status || errors.password ? " error" : "")} type="password" name="password" placeholder='Password' />
             <div className="text-danger">{errors.password}</div>
+            {status && <div className="text-danger">{status}</div>}
             <div className="form-check form-switch">
               <Field className="form-check-input" type="checkbox" name="remember" />
               <label className="form-check-label text-white">Remember me</label>
             </div>
-            {status==="error" && <div className="text-danger">Invalid login or password</div>}
             <Button className="btn-primary" type="submit">Log in</Button>
             <Button className="btn-secondary" onClick={() => history.push('/register')}>Register</Button>
           </Form>
@@ -61,15 +60,13 @@ function Login({ postLogin, badLoginAttempt, setBadLoginAttempt, status }) {
 
 const mapStateToProps = (state) => {
   return {
-    badLoginAttempt: state.user.badLoginAttempt,
     token: state.user.token,
     status: state.user.status
   }
 }
 
 const mapDispatchToProps = {
-  postLogin,
-  setBadLoginAttempt
+  postLogin
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

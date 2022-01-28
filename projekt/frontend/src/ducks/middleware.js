@@ -2,8 +2,10 @@ import { updateChat,
   updateGamesList, 
   updateMove, 
   mqttConnectionInit,
-  mqttConnectionState, 
-  updateSecondPlayer ,
+  mqttConnectionState,
+  esrcConnectionState, 
+  updateSecondPlayer,
+  setAdUrl,
   setWin
 } from './actions';
 import { checkWin } from './selectors'
@@ -14,6 +16,7 @@ import { MQTT_REQUEST } from './types';
 export const mqttMiddleware = store => next => action => {
   if (action.type == MQTT_REQUEST && !store.getState().mqtt.client) {
     store.dispatch(mqttConnectionInit());
+    
     const client = connect(`ws://localhost:3333`, {clientId: action.payload+'_'+Math.random().toString()});
     client.on('connect', () => {
       store.dispatch(mqttConnectionState(client));
@@ -33,12 +36,13 @@ export const mqttMiddleware = store => next => action => {
         currentPlayers.length==1 && !currentPlayers.includes(data.player) && store.dispatch(updateSecondPlayer(data.player))
         const checkWinOutput = checkWin(store.getState().game)
         checkWinOutput!==false && store.dispatch(setWin(checkWinOutput))
-        
       }
     }));
 
-    //client.publish('/topic', 'xd')
+    const es = new EventSource("http://localhost:7654")
+    store.dispatch(esrcConnectionState(es))
+    es.onmessage = (event) => store.dispatch(setAdUrl(event.data))
   }
 
-  next(action);
+  return next(action);
 };
