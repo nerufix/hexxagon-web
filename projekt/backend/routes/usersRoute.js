@@ -15,46 +15,6 @@ fs.readFile(__dirname+'/../data/users.json', (err,content) => {
   users = JSON.parse(content)
 })
 
-
-
-router.post('/login', (req, res) => {
-  const credentials = req.body
-  const query = users.find(el => 
-    (el.login === credentials.login && el.password === credentials.password)
-    || (el.token && credentials.token === el.token.value && new Date(el.token.due) > new Date())
-  )
-  if (!query) {
-    res.status(418).send({}) //TEST!
-  } else if (credentials.remember) {
-    const token = {
-      value: v4(),
-      due: new Date(Date.now() + ( 3600 * 1000 * 24))
-    }
-    users[users.findIndex(el => el === query)].token = token
-    writeToJson()
-    res.send({ login: query.login, score: query.score, role: query.role, token: token.value })
-  } else {
-    res.send({ login: query.login, score: query.score, role: query.role })
-  }
-})
-
-router.post('/register', (req, res) => {
-  const credentials = req.body
-  const existingUser = users.find(el => el.login===credentials.login)
-  if (!existingUser && credentials.login && credentials.password.length === 64) {
-    users.push({
-      login: credentials.login,
-      password: credentials.password,
-      role: 'user',
-      score: 0
-    })
-    writeToJson()
-    res.send({})
-  } else {
-    res.status(418).send({})
-  }
-})
-
 //SCORE
 
 router.put('/score', (req, res) => {
@@ -74,10 +34,6 @@ router.get('/scoreboard', (req, res) => {
     return b.score-a.score
   }).slice(0,10)
   res.send(query)
-})
-
-router.get('/', (req, res) => {
-  res.send(users.map(el => el.login))
 })
 
 router.put('/admin', (req, res) => {
@@ -106,6 +62,70 @@ router.get('/logs', (req, res) => {
     const dataFilter = data ? dateFilter.filter(el => el.data.includes(data)) : dateFilter
     res.send(date || data ? dataFilter : query.slice(-20, -1).reverse())
   })
+})
+
+//account crud
+
+router.post('/login', (req, res) => {
+  const credentials = req.body
+  const query = users.find(el => 
+    (el.login === credentials.login && el.password === credentials.password)
+    || (el.token && credentials.token === el.token.value && new Date(el.token.due) > new Date())
+  )
+  if (!query) {
+    res.status(418).send({message: 'Wrong credentials!'})
+  } else if (credentials.remember) {
+    const token = {
+      value: v4(),
+      due: new Date(Date.now() + ( 3600 * 1000 * 24))
+    }
+    users[users.findIndex(el => el === query)].token = token
+    writeToJson()
+    res.send({ login: query.login, score: query.score, role: query.role, token: token.value })
+  } else {
+    res.send({ login: query.login, score: query.score, role: query.role })
+  }
+})
+
+router.post('/register', (req, res) => {
+  const credentials = req.body
+  const existingUser = users.find(el => el.login===credentials.login)
+  if (!existingUser && credentials.login && credentials.password.length === 64) {
+    users.push({
+      login: credentials.login,
+      password: credentials.password,
+      role: 'user',
+      score: 0
+    })
+    writeToJson()
+    res.send({})
+  } else {
+    res.status(418).send({message: 'Username already taken!'})
+  }
+})
+
+router.put('/', (req, res) => {
+  const {newPassword, ...credentials} = req.body
+  const query = users.findIndex(el => el.login === credentials.login && el.password === credentials.password)
+  if (query<0 || newPassword.length !== 64) {
+    res.status(418).send({message: 'Wrong password!'})
+  } else {
+    users[query].password = newPassword
+    writeToJson()
+    res.send()
+  }
+})
+
+router.delete('/', (req, res) => {
+  const credentials = req.body
+  const query = users.findIndex(el => el.login === credentials.login && el.password === credentials.password)
+  if (query<0) {
+    res.status(418).send({message: 'Wrong password!'})
+  } else {
+    users.splice(query, 1)
+    writeToJson()
+    res.send()
+  }
 })
 
 module.exports = router;

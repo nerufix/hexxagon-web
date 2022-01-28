@@ -27,9 +27,9 @@ fs.readFile(__dirname+'/../data/games.json', (err,content) => {
   games = JSON.parse(content)
 })
 
-//game create crud
+//game crud
 
-router.post('/', (req, res) => {
+router.post('/create', (req, res) => {
   const {name, player} = req.body
   if (!player) {
     res.status(418).send()
@@ -98,7 +98,7 @@ router.put('/chatMessage', (req, res) => {
 
 //move crud
 
-router.post('/:id', (req, res) => {
+router.post('/move/:id', (req, res) => {
   const {player, move} = req.body
   const id = req.params.id
   const query = games.findIndex(el => el.id===id)
@@ -115,7 +115,7 @@ router.post('/:id', (req, res) => {
   }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/move/:id', (req, res) => {
   const id = req.params.id
   const query = games.findIndex(el => el.id===id)
   if (query<0) {
@@ -126,12 +126,34 @@ router.get('/:id', (req, res) => {
 })
 
 //change color?
-router.put('/:id', (req, res) => {
-  const credentials = req.body
+router.put('/move/:id', (req, res) => {
+  const id = req.params.id
+  const { hex, oldColor, newColor } = req.body
+  const gameIndex = games.findIndex(el => el.id===id)
+  const oldTileIndex = oldColor && gameIndex ? games[gameIndex].board[oldColor].findIndex(el => hexCompare(hex, el)) : undefined
+  if (!newColor || oldTileIndex<0) {
+    res.status(418).send()
+  } else {
+    console.log(oldColor, newColor, gameIndex)
+    games[gameIndex].board[oldColor].splice(oldTileIndex, 1)
+    games[gameIndex].board[newColor].push(hex)
+    writeToJson()
+    res.send()
+  }
 })
 
-router.delete('/:id', (req, res) => {
-  const credentials = req.body
+router.delete('/move/:id', (req, res) => {
+  const id = req.params.id
+  const { hex, color } = req.body
+  const gameIndex = games.findIndex(el => el.id===id)
+  const query = gameIndex ? games[gameIndex].board[color].findIndex(el => hexCompare(hex, el)) : undefined
+  if (query<0) {
+    res.status(418).send()
+  } else {
+    games[gameIndex].board[color].splice(query, 1)
+    writeToJson()
+    res.send()
+  }
 })
 
 module.exports = router;

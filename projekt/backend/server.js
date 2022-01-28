@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 const mqttServer = require('./mqtt') //required
+const sseServer = require('./sse')
 const games = require('./routes/gamesRoute')
 const users = require('./routes/usersRoute')
 const app = express()

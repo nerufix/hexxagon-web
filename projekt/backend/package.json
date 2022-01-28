@@ -9,11 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "connect": "^3.7.0",
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
     "jsonschema": "^1.2.6",
     "mosca": "^2.8.3",
+    "sse-channel": "^4.0.0",
     "uuid": "^8.3.2"
   }
 }
