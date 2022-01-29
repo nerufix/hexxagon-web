@@ -7,6 +7,7 @@ import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
 import { postMessage, joinGame } from '../ducks/operations'
 import ScrollableFeed from 'react-scrollable-feed'
 import Game from "./Game"
+import Darkreader from "react-darkreader"
 const axios = require('axios');
 
 function Room({ id, user, game, client, es, chat, ...props }) {
@@ -41,6 +42,12 @@ function Room({ id, user, game, client, es, chat, ...props }) {
 
   return (
     <div className="d-flex justify-content-center align-items-center flex-wrap">
+      {
+      document.cookie.includes('darkMode=true') && 
+      <div className="invisible">
+        <Darkreader defaultDarken />
+      </div>
+      }
       <Game />
       <div>
         <div className="chatbox rounded bg-dark">

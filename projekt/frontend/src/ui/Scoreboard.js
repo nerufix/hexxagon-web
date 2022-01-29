@@ -31,9 +31,9 @@ function Scoreboard(props) {
 
   
   return !props.scoreboard ? (<Loading />) : (
-    <div className="m-2 p-2 bg-dark rounded">
+    <div className="m-2 p-2 plot bg-dark rounded">
       <h4 className="pt-3 text-white mid">Best players</h4>
-      <div className="p-2 plot">
+      <div className="p-2">
         <Bar
           data={{
             labels: props.scoreboard.map(el => el.player),

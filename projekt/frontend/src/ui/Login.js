@@ -12,7 +12,7 @@ import sha256 from 'crypto-js/sha256';
 function Login({ postLogin, status }) {
 
   const history = useHistory()
-  
+  console.log(process.env)
   const handleSubmit = (values) => {
     postLogin({...values, password: sha256(values.password).toString()})
   }

@@ -142,12 +142,30 @@ function Game({ id, user, game, client, ...props }) {
     : `${game.players[index]} wins with a score of ${score}!` 
   }
 
+  const getAdminTweaks = () => (
+    <div class="m-2 rounded h6">
+      <div className="mid">Admin tweaks</div>
+      <div>
+        <input className="form-check-input" name="tweaks" type="radio" value="" onChange={(e) => setAdminTweak(e.target.value)} checked={adminTweak===''} />
+        None
+      </div>
+      <div>
+        <input className="form-check-input" name="tweaks" type="radio" value="delete" onChange={(e) => setAdminTweak(e.target.value)} />
+        Delete tile
+      </div>
+      <div>
+        <input className="form-check-input" name="tweaks" type="radio" value="swap" onChange={(e) => setAdminTweak(e.target.value)} />
+        Swap tile's color
+      </div>
+    </div>
+  )
+
   const rubyStyle = {
     stroke: 'none',
     fillOpacity: 1
   }
 
-  const gameSize = Math.min(window.innerWidth, 500)
+  const gameSize = Math.min(window.innerWidth-20, 500)
 
   return !game.board ? (<Loading />) : (
     <div className="p-3">
@@ -186,21 +204,7 @@ function Game({ id, user, game, client, ...props }) {
         <div className="mt-3 bg-dark d-flex flex-wrap justify-content-center text-white">
           <h3>{game.end ? getEndMessage() : `It's ${game.players[game.turnCount%2]}'s turn.`}</h3>
           <div className="break" />
-          <div class="m-2 rounded h6">
-            <div className="mid">Admin tweaks</div>
-            <div>
-              <input className="form-check-input" name="tweaks" type="radio" value="" onChange={(e) => setAdminTweak(e.target.value)} checked={adminTweak===''} />
-              None
-            </div>
-            <div>
-              <input className="form-check-input" name="tweaks" type="radio" value="delete" onChange={(e) => setAdminTweak(e.target.value)} />
-              Delete tile
-            </div>
-            <div>
-              <input className="form-check-input" name="tweaks" type="radio" value="swap" onChange={(e) => setAdminTweak(e.target.value)} />
-              Swap tile's color
-            </div>
-           </div>
+          {user.role==='admin' && getAdminTweaks()}
         </div>
       </>)} 
     </div>

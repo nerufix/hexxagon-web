@@ -17,7 +17,7 @@ export const mqttMiddleware = store => next => action => {
   if (action.type == MQTT_REQUEST && !store.getState().mqtt.client) {
     store.dispatch(mqttConnectionInit());
     
-    const client = connect(`ws://localhost:3333`, {clientId: action.payload+'_'+Math.random().toString()});
+    const client = connect(process.env.REACT_APP_API_ADDR.replace('http', 'ws')+`:3333`, {clientId: action.payload+'_'+Math.random().toString()});
     client.on('connect', () => {
       store.dispatch(mqttConnectionState(client));
       client.subscribe(`gamesList`);
@@ -39,7 +39,7 @@ export const mqttMiddleware = store => next => action => {
       }
     }));
 
-    const es = new EventSource("http://localhost:7654")
+    const es = new EventSource(process.env.REACT_APP_API_ADDR+":7654")
     store.dispatch(esrcConnectionState(es))
     es.onmessage = (event) => store.dispatch(setAdUrl(event.data))
   }

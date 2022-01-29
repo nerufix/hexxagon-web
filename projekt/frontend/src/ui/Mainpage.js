@@ -5,9 +5,10 @@ import Dashboard from './Dashboard'
 import { connect } from 'react-redux'
 import { useEffect } from 'react'
 import { postLogin } from '../ducks/operations'
-
+import Darkreader from 'react-darkreader'
 
 function Mainpage({user, postLogin}) {
+
 
   useEffect(() => {
     const tokenCookie = document.cookie.includes('token=')
@@ -18,6 +19,12 @@ function Mainpage({user, postLogin}) {
 
   return (
     <>
+      {
+      document.cookie.includes('darkMode=true') && 
+      <div className="invisible">
+        <Darkreader defaultDarken />
+      </div>
+      }
       {user ? <Dashboard /> : <Login />}
     </>
   )

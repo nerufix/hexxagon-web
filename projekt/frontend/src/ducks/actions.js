@@ -82,3 +82,11 @@ export const setWin = (payload) => {
     payload: payload
   }
 }
+
+export const setCurrentPage = (payload) => {
+  return {
+    type: types.OTHER,
+    meta: 'ad',
+    payload: {currentPage: payload}
+  }
+}

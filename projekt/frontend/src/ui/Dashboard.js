@@ -9,11 +9,14 @@ import AdminPanel from "./AdminPanel"
 import UserPanel from "./UserPanel"
 import Scoreboard from "./Scoreboard"
 import Loading from "./Loading"
+import { Switch, useDarkreader } from 'react-darkreader';
 const axios = require('axios');
 
 function Dashboard({ user, game, token, games, client, ...props }) {
 
   const history = useHistory()
+
+  const [isDark, { toggle }] = useDarkreader(document.cookie.includes('darkMode=true'));
 
   useEffect(() => {
     token && (document.cookie = 'token='+token)
@@ -28,6 +31,10 @@ function Dashboard({ user, game, token, games, client, ...props }) {
     props.requestMqtt(user.login)
     props.getGamesList()
   }, [])
+  
+  useEffect(() => {
+    document.cookie = 'darkMode='+(isDark ? 'true' : 'false')
+  }, [isDark])
 
   const handleLogout = () => {
     props.resetEntity('user')
@@ -47,7 +54,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
 
   const handleGameSubmit = (values) => {
     //props.postGame(values.name, user.login)
-    axios.post('http://localhost:5000/games/create', {name: values.name, player: user.login}).then((res) => {
+    axios.post(process.env.REACT_APP_API_ADDR+':5000/games/create', {name: values.name, player: user.login}).then((res) => {
       client.publish('gamesList', JSON.stringify(res.data))
       history.push('/game/'+res.data.id)
     })
@@ -108,6 +115,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
           <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
         </div>
         <div>
+        <Switch checked={isDark} onChange={toggle} />
           {games.map(el => getGameElement(el))}
         </div>
       </div>

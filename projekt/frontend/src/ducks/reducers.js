@@ -11,6 +11,9 @@ const defaultState = {
     gamesList: [],
     chat: []
   },
+  ad: {
+    currentPage: 1,
+  },
   mqtt: {},
   esrc: {}
 } 

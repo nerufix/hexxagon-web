@@ -39,20 +39,20 @@ function UserPanel({ user, status, ...props }) {
 
   const popover = (
     <Popover id="popover-basic">
-    <Popover.Header as="h3">Type your password first.</Popover.Header>
-    <Popover.Body>
-      <Formik initialValues={{password: ''}} 
-        onSubmit={(values) => handleDeleteClick(values)}>
-        {() => (
-          <Form>
-            <Field className={"form-control"+(user.status ? " error" : "")} type="password" name="password" placeholder='Password' />
-              <div className="text-danger">{user.status}</div>
-            <Button variant="danger" type="submit">Delete</Button>
-          </Form>
-        )}
-      </Formik>
-    </Popover.Body>
-  </Popover>
+      <Popover.Header as="h3">Type your password first.</Popover.Header>
+      <Popover.Body>
+        <Formik initialValues={{password: ''}} 
+          onSubmit={(values) => handleDeleteClick(values)}>
+          {() => (
+            <Form>
+              <Field className={"form-control"+(user.status ? " error" : "")} type="password" name="password" placeholder='Password' />
+                <div className="text-danger">{user.status}</div>
+              <Button variant="danger" type="submit">Delete</Button>
+            </Form>
+          )}
+        </Formik>
+      </Popover.Body>
+    </Popover>
   )
 
 

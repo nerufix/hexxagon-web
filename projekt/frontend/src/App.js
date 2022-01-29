@@ -13,22 +13,25 @@ import Room from './ui/Room';
 function App() {
 
   return (
-    <Router>
-      <ScrollToTop />
-      <Switch>
-        <Route path="/game/:id">
-          <Room />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          <Mainpage />
-        </Route>
-      </Switch>
-      {//status && <div className='status'><h1>{status}</h1></div>
-      }
-    </Router>
+    <div className="App">
+      <Router >
+        <ScrollToTop />
+        <Switch>
+          <Route path="/game/:id">
+            <Room />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/">
+            <Mainpage />
+          </Route>
+        </Switch>
+        {//status && <div className='status'><h1>{status}</h1></div>
+        }
+      </Router>
+    </div>
+    
   )
 }
 

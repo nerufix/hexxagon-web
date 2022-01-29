@@ -26,8 +26,9 @@ h1, h2, h3, h4, h5, h6, p, .chatbox {
   overflow-wrap: anywhere;
 }
 
-body {
-  background-color: rgba(rgb(9, 0, 43), 0.7);
+.App {
+  min-height: 100vh;
+  background-color: #544670;
 }
 
 .mid {
@@ -37,6 +38,10 @@ body {
     justify-content: left;
     text-align: left;
   }
+}
+
+.invisible {
+  display: none;
 }
 
 .left {
@@ -89,7 +94,7 @@ ul {
 .plot {
   color: white;
   font-weight: 200;
-  width: 400px;
+  width: 350px;
 }
 
 
@@ -101,8 +106,8 @@ ul {
 }
 
 .ad {
-  width: 400px;
-  height: 400px;
+  max-width: 350px;
+  height: 350px;
   position: relative;
   .x-sign {
     position: absolute;

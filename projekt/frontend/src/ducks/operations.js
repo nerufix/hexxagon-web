@@ -2,7 +2,7 @@ import {createAction} from 'redux-api-middleware'
 import * as types from './types'
 
 export const postLogin = (cred) => createAction({
-  endpoint: `http://localhost:5000/users/login/`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/login/`,
   method: 'POST',
   body: JSON.stringify(cred),
   headers: { 'Content-Type': 'application/json' },
@@ -27,7 +27,7 @@ export const postLogin = (cred) => createAction({
 })
 
 export const postRegister = (cred) => createAction({
-  endpoint: `http://localhost:5000/users/register/`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/register/`,
   method: 'POST',
   body: JSON.stringify(cred),
   headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ export const postRegister = (cred) => createAction({
 })
 
 export const getGamesList = () => createAction({
-  endpoint: `http://localhost:5000/games/`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/`,
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -76,7 +76,7 @@ export const getGamesList = () => createAction({
 })
 
 export const postGame = (name, player) => createAction({
-  endpoint: `http://localhost:5000/games/create`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/create`,
   method: 'POST',
   body: JSON.stringify({name, player}),
   headers: { 'Content-Type': 'application/json' },
@@ -97,7 +97,7 @@ export const postGame = (name, player) => createAction({
 })
 
 export const joinGame = (id, player) => createAction({
-  endpoint: `http://localhost:5000/games/join/${id}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/join/${id}`,
   method: 'PUT',
   body: JSON.stringify({player: player}),
   headers: { 'Content-Type': 'application/json' },
@@ -122,7 +122,7 @@ export const joinGame = (id, player) => createAction({
 })
 
 export const postMessage = (id, player, message) => createAction({
-  endpoint: `http://localhost:5000/games/chatMessage`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/chatMessage`,
   method: 'PUT',
   body: JSON.stringify({id: id, player: player, message: message}),
   headers: { 'Content-Type': 'application/json' },
@@ -143,7 +143,7 @@ export const postMessage = (id, player, message) => createAction({
 })
 
 export const getUsers = () => createAction({
-  endpoint: `http://localhost:5000/users`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users`,
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -167,7 +167,7 @@ export const getUsers = () => createAction({
 })
 
 export const putAdmin = (admin, newAdmin) => createAction({
-  endpoint: `http://localhost:5000/users/admin`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/admin`,
   method: 'PUT',
   body: JSON.stringify({admin: admin, newAdmin: newAdmin}),
   headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,7 @@ export const putAdmin = (admin, newAdmin) => createAction({
 })
 
 export const getLogs = (date='', data='') => createAction({
-  endpoint: `http://localhost:5000/users/logs?date=${date.slice(0,10)}&data=${data}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/logs?date=${date.slice(0,10)}&data=${data}`,
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -212,7 +212,7 @@ export const getLogs = (date='', data='') => createAction({
 })
 
 export const postMove = (id, player, move) => createAction({
-  endpoint: `http://localhost:5000/games/move/${id}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/move/${id}`,
   method: 'POST',
   body: JSON.stringify({player: player, move: move}),
   headers: { 'Content-Type': 'application/json' },
@@ -233,7 +233,7 @@ export const postMove = (id, player, move) => createAction({
 })
 
 export const getScoreboard = () => createAction({
-  endpoint: `http://localhost:5000/users/scoreboard/`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/scoreboard/`,
   method: 'GET',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -257,7 +257,7 @@ export const getScoreboard = () => createAction({
 })
 
 export const deleteGame = (id) => createAction({
-  endpoint: `http://localhost:5000/games/${id}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/${id}`,
   method: 'DELETE',
   headers: { 'Content-Type': 'application/json' },
   types: [
@@ -281,7 +281,7 @@ export const deleteGame = (id) => createAction({
 })
 
 export const putScore = (player, score) => createAction({
-  endpoint: `http://localhost:5000/users/score`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users/score`,
   body: JSON.stringify({player: player, score: score}),
   method: 'PUT',
   headers: { 'Content-Type': 'application/json' },
@@ -302,7 +302,7 @@ export const putScore = (player, score) => createAction({
 })
 
 export const putMove = (id, hex, oldColor, newColor) => createAction({
-  endpoint: `http://localhost:5000/games/move/${id}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/move/${id}`,
   body: JSON.stringify({hex, oldColor, newColor}),
   method: 'PUT',
   headers: { 'Content-Type': 'application/json' },
@@ -323,7 +323,7 @@ export const putMove = (id, hex, oldColor, newColor) => createAction({
 })
 
 export const deleteMove = (id, hex, color) => createAction({
-  endpoint: `http://localhost:5000/games/move/${id}`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/games/move/${id}`,
   body: JSON.stringify({hex, color}),
   method: 'DELETE',
   headers: { 'Content-Type': 'application/json' },
@@ -344,7 +344,7 @@ export const deleteMove = (id, hex, color) => createAction({
 })
 
 export const putUser = (login, password, newPassword) => createAction({
-  endpoint: `http://localhost:5000/users`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users`,
   body: JSON.stringify({login, password, newPassword}),
   method: 'PUT',
   headers: { 'Content-Type': 'application/json' },
@@ -365,7 +365,7 @@ export const putUser = (login, password, newPassword) => createAction({
 })
 
 export const deleteUser = (login, password) => createAction({
-  endpoint: `http://localhost:5000/users`,
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/users`,
   body: JSON.stringify({login, password}),
   method: 'DELETE',
   headers: { 'Content-Type': 'application/json' },
@@ -381,6 +381,105 @@ export const deleteUser = (login, password) => createAction({
     {
       type: types.SQL_FAILURE,
       meta: 'user'
+    }
+  ]
+})
+
+export const postAd = (login, url) => createAction({
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/ads?login=${login}`,
+  method: 'POST',
+  body: JSON.stringify({url}),
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'ad'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {ads: json}
+      },
+      meta: 'ad'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'ad'
+    }
+  ]
+})
+
+export const getAds = (login) => createAction({
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/ads?login=${login}`,
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'ad'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {ads: json}
+      },
+      meta: 'ad'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'ad'
+    }
+  ]
+})
+
+export const putAd = (login, oldUrl, newUrl) => createAction({
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/ads?login=${login}`,
+  method: 'PUT',
+  body: JSON.stringify({oldUrl, newUrl}),
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'ad'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {ads: json}
+      },
+      meta: 'ad'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'ad'
+    }
+  ]
+})
+
+export const deleteAd = (login, url) => createAction({
+  endpoint: `${process.env.REACT_APP_API_ADDR}:5000/ads?login=${login}`,
+  method: 'DELETE',
+  body: JSON.stringify({url}),
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    {
+      type: types.SQL_REQUEST,
+      meta: 'ad'
+    },
+    {
+      type: types.OTHER,
+      payload: async (action, state, res) => {
+        const json = await res.json()
+        return {ads: json}
+      },
+      meta: 'ad'
+    },
+    {
+      type: types.SQL_FAILURE,
+      meta: 'ad'
     }
   ]
 })
