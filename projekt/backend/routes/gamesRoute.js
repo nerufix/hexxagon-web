@@ -11,7 +11,7 @@ const defaultBoard = {
 }
 
 const writeToJson = () => {
-  fs.writeFile(__dirname+'/../data/games.json', JSON.stringify(games), 'utf8', () => {console.log('exported to json')});
+  fs.writeFile(__dirname+'/../data/games.json', JSON.stringify(games), 'utf8', () => {console.log('exported games to json')});
 }
 
 const hexCompare = (hex1, hex2) => {

@@ -7,7 +7,7 @@ var users = []
 var logs = []
 
 const writeToJson = () => {
-  fs.writeFile(__dirname+'/../data/users.json', JSON.stringify(users), 'utf8', () => {console.log('exported to json')});
+  fs.writeFile(__dirname+'/../data/users.json', JSON.stringify(users), 'utf8', () => {console.log('exported users to json')});
 }
 
 fs.readFile(__dirname+'/../data/users.json', (err,content) => {
@@ -102,6 +102,10 @@ router.post('/register', (req, res) => {
   } else {
     res.status(418).send({message: 'Username already taken!'})
   }
+})
+
+router.get('/', (req, res) => {
+  res.send(users.map(el => el.login))
 })
 
 router.put('/', (req, res) => {
