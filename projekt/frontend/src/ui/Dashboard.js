@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import { useEffect, useState } from "react"
 import { Field, Form, Formik } from "formik"
-import { Button, Popover, OverlayTrigger } from "react-bootstrap"
+import { Button, Popover, OverlayTrigger, Toast } from "react-bootstrap"
 import { useHistory } from "react-router-dom"
 import { resetUser, requestMqtt, resetEntity } from '../ducks/actions'
 import { getGamesList, postGame, joinGame, deleteGame } from '../ducks/operations'
@@ -10,6 +10,7 @@ import UserPanel from "./UserPanel"
 import Scoreboard from "./Scoreboard"
 import Loading from "./Loading"
 import { Switch, useDarkreader } from 'react-darkreader';
+import Pagination from "./Pagination"
 const axios = require('axios');
 
 function Dashboard({ user, game, token, games, client, ...props }) {
@@ -17,6 +18,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const history = useHistory()
 
   const [isDark, { toggle }] = useDarkreader(document.cookie.includes('darkMode=true'));
+  const [notificationShow, setNotificationShow] = useState(false)
 
   useEffect(() => {
     token && (document.cookie = 'token='+token)
@@ -35,6 +37,18 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   useEffect(() => {
     document.cookie = 'darkMode='+(isDark ? 'true' : 'false')
   }, [isDark])
+
+  useEffect(() => {
+    if (client) {
+      client.subscribe(`gamesList`);
+      client.subscribe('playerLocation')
+      client.subscribe('invite/'+user.login)
+    }
+  }, [client])
+
+  useEffect(() => {
+    props.invitation && setNotificationShow(true)
+  }, [props.invitation])
 
   const handleLogout = () => {
     props.resetEntity('user')
@@ -99,24 +113,51 @@ function Dashboard({ user, game, token, games, client, ...props }) {
     )
   }
 
+  const getNotification = () => (
+    <Toast className="notification" onClose={() => setNotificationShow(false)} show={notificationShow}>
+      <Toast.Header>
+        <strong className="me-auto">Invitation</strong>
+        <small>just now</small>
+      </Toast.Header>
+      <Toast.Body>
+        Howdy partner, it's your boy {props.invitation.from}, come play with me!
+        <Button variant="outline-primary" onClick={() => history.push('game/'+props.invitation.id)}>
+          Accept
+        </Button>
+        <Button variant="outline-danger" onClick={() => setNotificationShow(false)}>Decline</Button>
+      </Toast.Body>
+    </Toast>
+  )
+
   return (
     <div className="d-flex flex-wrap justify-content-center">
-      <div className="m-2 p-2 panel bg-dark rounded">
-        <div className="d-flex navbar justify-content-between">
-          <div>Hello, {user.login}</div>
-          <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-            <Button variant="outline-secondary">Create game</Button>
-          </OverlayTrigger>
-          {
-            user.role === 'admin' && 
-            <AdminPanel />
-          }
-          <UserPanel />
-          <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
+      {props.invitation && getNotification()}
+      <div>
+        <div className="m-2 p-2 panel bg-dark rounded">
+          <div className="d-flex navbar justify-content-end">
+            <div>Hello, {user.login}</div>
+            <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+              <Button variant="outline-secondary">Create game</Button>
+            </OverlayTrigger>
+            {
+              user.role === 'admin' && 
+              <AdminPanel />
+            }
+            <UserPanel />
+            <Button variant="outline-danger" onClick={handleLogout}>Log out</Button>
+          </div>
+          <div>
+          <Switch checked={isDark} onChange={toggle} />
+          <Pagination entity="game" elements={games.map(el => getGameElement(el))} />
+          </div>
         </div>
-        <div>
-        <Switch checked={isDark} onChange={toggle} />
-          {games.map(el => getGameElement(el))}
+        <div className="m-2 p-2 text-white bg-dark rounded">
+          <div>
+            Players currently in lobby: {props.playerLocation.lobby ? props.playerLocation.lobby.join(',') : ''}
+          </div>
+          <div>
+            Players currently in game: {props.playerLocation.game ? props.playerLocation.game.join(',') : ''}
+          </div>
         </div>
       </div>
       <div>
@@ -138,7 +179,9 @@ const mapStateToProps = (state) => {
     token: state.user.token,
     client: state.mqtt.client,
     games: state.game.gamesList,
-    adUrl: state.esrc.adUrl
+    adUrl: state.esrc.adUrl,
+    playerLocation: state.user.playerLocation,
+    invitation: state.game.invitation
   }
 }
 

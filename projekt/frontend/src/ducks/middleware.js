@@ -6,7 +6,9 @@ import { updateChat,
   esrcConnectionState, 
   updateSecondPlayer,
   setAdUrl,
-  setWin
+  setWin,
+  setPlayerLocation,
+  setInvitation
 } from './actions';
 import { checkWin } from './selectors'
 import { connect } from "mqtt/dist/mqtt" 
@@ -20,7 +22,6 @@ export const mqttMiddleware = store => next => action => {
     const client = connect(process.env.REACT_APP_API_ADDR.replace('http', 'ws')+`:3333`, {clientId: action.payload+'_'+Math.random().toString()});
     client.on('connect', () => {
       store.dispatch(mqttConnectionState(client));
-      client.subscribe(`gamesList`);
     });
 
     client.on('message', ((topic, payload) => {
@@ -36,6 +37,10 @@ export const mqttMiddleware = store => next => action => {
         currentPlayers.length==1 && !currentPlayers.includes(data.player) && store.dispatch(updateSecondPlayer(data.player))
         const checkWinOutput = checkWin(store.getState().game)
         checkWinOutput!==false && store.dispatch(setWin(checkWinOutput))
+      } else if (topic && topic.includes('playerLocation')) {
+        store.dispatch(setPlayerLocation(data))
+      } else if (topic && topic.includes('invite/'+store.getState().user.login)) {
+        store.dispatch(setInvitation(data))
       }
     }));
 

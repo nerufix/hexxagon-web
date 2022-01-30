@@ -143,14 +143,6 @@ function Game({ id, user, game, client, ...props }) {
     : `${game.players[index]} wins with a score of ${score}!` 
   }
 
-  const getTurnMessage = () => {
-    const player = game.players[game.turnCount%2]
-    const color = game.turnCount%2===0 ? 'red' : 'blue'
-    return (
-      <>It's <span className={'text-'+color}>{player}'s</span> turn.</>
-    )
-  }
-
   const getAdminTweaks = () => (
     <div class="m-2 rounded h6">
       <div className="mid">Admin tweaks</div>
@@ -234,7 +226,7 @@ function Game({ id, user, game, client, ...props }) {
           </HexGrid>
         </div>
         <div className="mt-3 bg-dark d-flex flex-wrap justify-content-center text-white">
-          <h3>{game.end ? getEndMessage() : getTurnMessage()}</h3>
+          <h3>{game.end ? getEndMessage() : `It's ${game.players[game.turnCount%2]}'s turn.`}</h3>
           <div className="break" />
           {user.role==='admin' && getAdminTweaks()}
         </div>

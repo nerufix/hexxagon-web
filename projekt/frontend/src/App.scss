@@ -40,6 +40,13 @@ h1, h2, h3, h4, h5, h6, p, .chatbox {
   }
 }
 
+.notification {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 1;
+}
+
 .invisible {
   display: none;
 }
@@ -86,7 +93,7 @@ ul {
 }
 
 .panel {
-  max-width: 900px;
+  max-width: 600px;
   color: white;
   font-weight: 200;
 }
@@ -262,6 +269,14 @@ form {
   }
 }
 
+.text-red {
+  color: #ea1f1f;
+}
+
+.text-blue {
+  color: #1f5cea;
+}
+
 .hexagon-red {
   position: relative;
   width: 25px; 
@@ -331,4 +346,40 @@ form {
   to {
     transform: rotate(360deg);
   }
+}
+
+.item-enter {
+  opacity: 0;
+  background-color: #693ebe;
+}
+.item-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+  background-color: #693ebe;
+}
+.item-exit {
+  opacity: 1;
+  background-color: #693ebe;
+}
+.item-exit-active {
+  opacity: 0;
+  background-color: #693ebe;
+  transition: opacity 500ms ease-in;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+g > .hexagon > polygon {
+  animation: .5s appear;
 }

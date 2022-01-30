@@ -83,10 +83,26 @@ export const setWin = (payload) => {
   }
 }
 
-export const setCurrentPage = (payload) => {
+export const setCurrentPage = (payload, entity) => {
   return {
     type: types.OTHER,
-    meta: 'ad',
+    meta: entity,
     payload: {currentPage: payload}
+  }
+}
+
+export const setPlayerLocation = (payload) => {
+  return {
+    type: types.OTHER,
+    meta: 'user',
+    payload: payload
+  }
+}
+
+export const setInvitation = (payload) => {
+  return {
+    type: types.OTHER,
+    meta: 'game',
+    payload: {invitation: payload}
   }
 }

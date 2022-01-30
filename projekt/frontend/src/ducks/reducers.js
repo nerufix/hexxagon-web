@@ -5,11 +5,13 @@ const error = 'error'
 
 const defaultState = {
   user: {
-    scoreboard: []
+    scoreboard: [],
+    playerLocation: {}
   },
   game: {
     gamesList: [],
-    chat: []
+    chat: [],
+    currentPage: 1
   },
   ad: {
     currentPage: 1,

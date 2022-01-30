@@ -9,7 +9,7 @@ function Pagination({elements, currentPage, setCurrentPage, ...props}) {
   const startRef = useRef(null)
 
   const handlePageChange = (event) => {
-    setCurrentPage(parseInt(event.target.id))
+    setCurrentPage(parseInt(event.target.id), props.entity)
     startRef.current.scrollIntoView()   
   }
 
