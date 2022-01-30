@@ -15,7 +15,7 @@ const playerLocation = {
 }
 
 const publish = (topic, message) => {
-  server.publish({topic: topic, payload: message, qos: 1, retain: false})
+  server.publish({topic: topic, payload: message, qos: 2, retain: false})
 }
 
 server.on('ready', () => {

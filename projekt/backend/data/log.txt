@@ -1,0 +1,5 @@
+2022-01-30T18:17:32.807Z: mqtt published on $SYS/0GdXXuu/new/unsubscribes, data: {"clientId":"admin_0.2747197110189097","topic":"playerLocation"}
+2022-01-30T18:17:32.808Z: mqtt published on $SYS/0GdXXuu/new/unsubscribes, data: {"clientId":"admin_0.2747197110189097","topic":"invite/admin"}
+2022-01-30T18:17:32.808Z: mqtt published on $SYS/0GdXXuu/new/unsubscribes, data: {"clientId":"admin_0.2747197110189097","topic":"gamesList"}
+2022-01-30T18:17:32.811Z: mqtt published on playerLocation, data: {"playerLocation":{"game":[],"lobby":[]}}
+2022-01-30T18:17:32.811Z: mqtt published on $SYS/0GdXXuu/disconnect/clients, data: admin_0.2747197110189097
