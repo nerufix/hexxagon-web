@@ -1,13 +1,18 @@
-var mosca = require('mosca')
+const mosca = require('mosca')
 
-var fs = require('fs')
+const fs = require('fs')
 
-var settings = {
+const settings = {
   port: 1883,
   http: {port: 3333, bundle: true, static: './'}  
 }
 
-var server = new mosca.Server(settings);
+const server = new mosca.Server(settings);
+
+const playerLocation = {
+  game: [],
+  lobby: []
+}
 
 const publish = (topic, message) => {
   server.publish({topic: topic, payload: message, qos: 1, retain: false})
@@ -38,15 +43,25 @@ server.subscribe('#', (topic, payload) => {
       player: pl.clientId.split('_0.')[0],
       message: 'connected to the chat'
     }))
+    playerLocation.game.push(pl.clientId.split('_0.')[0])
+    publish('playerLocation', JSON.stringify({playerLocation}))
   } else if (topic.includes('/unsubscribes') && pl.topic.includes('chat')) {
     publish(pl.topic, JSON.stringify({
       date: Date.now(),
       player: pl.clientId.split('_0.')[0],
       message: 'left the chat'
     }))
+    playerLocation.game.splice(playerLocation.game.indexOf(pl.clientId.split('_0.')[0]), 1)
+    publish('playerLocation', JSON.stringify({playerLocation}))
   } else if (topic.includes('/subscribes') && pl.topic.includes('moves')) {
     publish(pl.topic, JSON.stringify({
       player: pl.clientId.split('_0.')[0],
     }))
+  } else if (topic.includes('/subscribes') && pl.topic.includes('gamesList')) {
+    playerLocation.lobby.push(pl.clientId.split('_0.')[0])
+    publish('playerLocation', JSON.stringify({playerLocation}))
+  } else if (topic.includes('/unsubscribes') && pl.topic.includes('gamesList')) {
+    playerLocation.lobby.splice(playerLocation.lobby.indexOf(pl.clientId.split('_0.')[0]), 1)
+    publish('playerLocation', JSON.stringify({playerLocation}))
   }
 });
