@@ -16,7 +16,7 @@ function Room({ id, user, game, client, es, chat, ...props }) {
 
   useEffect(() => {
     props.joinGame(id, user.login)
-    client.subscribe('chat/'+id)
+    client.subscribe('chat/'+id, { qos: 2 })
     client.unsubscribe('gamesList')
   }, [])
   

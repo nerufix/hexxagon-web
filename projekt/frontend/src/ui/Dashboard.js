@@ -40,9 +40,9 @@ function Dashboard({ user, game, token, games, client, ...props }) {
 
   useEffect(() => {
     if (client) {
-      client.subscribe(`gamesList`);
-      client.subscribe('playerLocation')
-      client.subscribe('invite/'+user.login)
+      client.subscribe(`gamesList`, { qos: 2 });
+      client.subscribe('playerLocation', { qos: 2 })
+      client.subscribe('invite/'+user.login, { qos: 2 })
     }
   }, [client])
 
@@ -53,6 +53,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const handleLogout = () => {
     props.resetEntity('user')
     props.resetEntity('mqtt')
+    client.unsubscribe(`gamesList`);
     document.cookie = 'token=reset'
     history.push('/')
   }

@@ -17,7 +17,7 @@ function Game({ id, user, game, client, ...props }) {
 
   const history = useHistory()
   useEffect(() => {
-    client.subscribe('moves/'+id)
+    client.subscribe('moves/'+id, { qos: 2 })
   }, [])
 
   useEffect(() => {
