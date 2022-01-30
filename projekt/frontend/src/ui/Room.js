@@ -26,7 +26,7 @@ function Room({ id, user, game, client, es, chat, ...props }) {
       date: new Date(),
       player: user.login, 
       message: values.message
-    }))
+    }), {qos: 2})
   }
 
   const getChatMessage = (message) => {

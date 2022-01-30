@@ -70,7 +70,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const handleGameSubmit = (values) => {
     //props.postGame(values.name, user.login)
     axios.post(process.env.REACT_APP_API_ADDR+':5000/games/create', {name: values.name, player: user.login}).then((res) => {
-      client.publish('gamesList', JSON.stringify(res.data))
+      client.publish('gamesList', JSON.stringify(res.data), {qos: 2})
       history.push('/game/'+res.data.id)
     })
   }
