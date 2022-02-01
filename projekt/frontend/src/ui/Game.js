@@ -18,7 +18,7 @@ function Game({ id, user, game, client, ...props }) {
 
   const history = useHistory()
   useEffect(() => {
-    client.subscribe('moves/'+id, { qos: 2 })
+    client.subscribe('moves/'+id, { qos: 1 })
   }, [])
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function Game({ id, user, game, client, ...props }) {
         color: props.playerColor, 
         to: [hex, ...takenTiles]
       }
-      client.publish('moves/'+id, JSON.stringify(dataToSend), {qos: 2})
+      client.publish('moves/'+id, JSON.stringify(dataToSend), {qos: 1})
       props.postMove(id, user.login, dataToSend)
     } else if (isTwoTilesApart(hex, atSelect)) {
       const dataToSend = {
@@ -78,7 +78,7 @@ function Game({ id, user, game, client, ...props }) {
         from: atSelect, 
         to: [hex, ...takenTiles]
       }
-      client.publish('moves/'+id, JSON.stringify(dataToSend), {qos: 2})
+      client.publish('moves/'+id, JSON.stringify(dataToSend), {qos: 1})
       props.postMove(id, user.login, dataToSend)
     }
     setMovePossible(false)
@@ -93,7 +93,7 @@ function Game({ id, user, game, client, ...props }) {
       color: hexColor, 
       from: hex,
       to: []
-    }, {qos: 2}))
+    }, {qos: 1}))
   }
 
   const handleSwapClick = (hex) => {
@@ -104,7 +104,7 @@ function Game({ id, user, game, client, ...props }) {
       turnCount: game.turnCount, 
       color: newColor, 
       to: [hex]
-    }, {qos: 2}))
+    }, {qos: 1}))
   }
 
 
@@ -172,7 +172,7 @@ function Game({ id, user, game, client, ...props }) {
 
   const handleInviteClick = (player) => {
     setInviteClicked([...inviteClicked, player])
-    client.publish('invite/'+player, JSON.stringify({id, from: user.login}), {qos: 2})
+    client.publish('invite/'+player, JSON.stringify({id, from: user.login}), {qos: 1})
   }
 
   const getWaitingOptions = () => (

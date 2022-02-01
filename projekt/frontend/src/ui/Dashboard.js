@@ -27,8 +27,8 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   useEffect(() => {
     props.resetEntity('game')
     if (game.id) {
-      client.unsubscribe('moves/'+game.id, { qos: 2 })
-      client.unsubscribe('chat/'+game.id, { qos: 2 })
+      client.unsubscribe('moves/'+game.id, { qos: 1 })
+      client.unsubscribe('chat/'+game.id, { qos: 1 })
     }
     props.requestMqtt(user.login)
     props.getGamesList()
@@ -40,9 +40,9 @@ function Dashboard({ user, game, token, games, client, ...props }) {
 
   useEffect(() => {
     if (client) {
-      client.subscribe(`gamesList`, { qos: 2 });
-      client.subscribe('playerLocation', { qos: 2 })
-      client.subscribe('invite/'+user.login, { qos: 2 })
+      client.subscribe(`gamesList`, { qos: 1 });
+      client.subscribe('playerLocation', { qos: 1 })
+      client.subscribe('invite/'+user.login, { qos: 1 })
     }
   }, [client])
 
@@ -70,7 +70,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   const handleGameSubmit = (values) => {
     //props.postGame(values.name, user.login)
     axios.post(process.env.REACT_APP_API_ADDR+':5000/games/create', {name: values.name, player: user.login}).then((res) => {
-      client.publish('gamesList', JSON.stringify(res.data), {qos: 2})
+      client.publish('gamesList', JSON.stringify(res.data), {qos: 1})
       history.push('/game/'+res.data.id)
     })
   }

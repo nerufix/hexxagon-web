@@ -16,8 +16,8 @@ function Room({ id, user, game, client, es, chat, ...props }) {
 
   useEffect(() => {
     props.joinGame(id, user.login)
-    client.subscribe('chat/'+id, { qos: 2 })
-    client.unsubscribe('gamesList', { qos: 2 })
+    client.subscribe('chat/'+id, { qos: 1 })
+    client.unsubscribe('gamesList', { qos: 1 })
   }, [])
   
   const handleChatSend = (values) => {
@@ -26,7 +26,7 @@ function Room({ id, user, game, client, es, chat, ...props }) {
       date: new Date(),
       player: user.login, 
       message: values.message
-    }), {qos: 2})
+    }), {qos: 1})
   }
 
   const getChatMessage = (message) => {
