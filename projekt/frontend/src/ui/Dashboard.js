@@ -27,8 +27,8 @@ function Dashboard({ user, game, token, games, client, ...props }) {
   useEffect(() => {
     props.resetEntity('game')
     if (game.id) {
-      client.unsubscribe('moves/'+game.id)
-      client.unsubscribe('chat/'+game.id)
+      client.unsubscribe('moves/'+game.id, { qos: 2 })
+      client.unsubscribe('chat/'+game.id, { qos: 2 })
     }
     props.requestMqtt(user.login)
     props.getGamesList()
