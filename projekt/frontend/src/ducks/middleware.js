@@ -8,7 +8,8 @@ import { updateChat,
   setAdUrl,
   setWin,
   setPlayerLocation,
-  setInvitation
+  setInvitation,
+  setEmoji
 } from './actions';
 import { checkWin } from './selectors'
 import { connect } from "mqtt/dist/mqtt" 
@@ -41,6 +42,8 @@ export const mqttMiddleware = store => next => action => {
         store.dispatch(setPlayerLocation(data))
       } else if (topic && topic.includes('invite/'+store.getState().user.login)) {
         store.dispatch(setInvitation(data))
+      } else if (topic && topic.includes('emojis/')) {
+        store.dispatch(setEmoji(data))
       }
     }));
 

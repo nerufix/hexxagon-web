@@ -81,7 +81,7 @@ function AdminPanel({ user, users, logs, latestLogs, ads, ...props }) {
   }
 
   const getAdElement = (ad) => (
-    <div className="my-1 p-2 bg-info rounded d-flex flex-wrap">
+    <div key={ad} className="my-1 p-2 bg-info rounded d-flex flex-wrap">
       <a className="p-1 left text-white" href={ad} target="_blank">
         {ad.slice(0,35)}...  
       </a>
@@ -150,7 +150,7 @@ function AdminPanel({ user, users, logs, latestLogs, ads, ...props }) {
             <Form>
               <Field as="select" name="login" className="form-select">
                 <option value="" default hidden>Select user...</option>
-                {users.map(el => <option value={el}>{el}</option>)}
+                {users.map(el => <option key={el} value={el}>{el}</option>)}
               </Field>
               {errors.login}
               <Button type="submit">Make this user an admin</Button>

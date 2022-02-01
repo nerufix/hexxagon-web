@@ -93,7 +93,7 @@ function Dashboard({ user, game, token, games, client, ...props }) {
 
   const getGameElement = (game) => {
     return (
-      <div className="m-2 p-2 bg-secondary rounded d-flex flex-wrap">
+      <div key={game.id} className="m-2 p-2 bg-secondary rounded d-flex flex-wrap">
         <div className="left">
           <h5>{game.name}</h5>
           <div className="break"></div>

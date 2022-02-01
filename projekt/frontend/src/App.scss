@@ -141,6 +141,7 @@ ul {
 
 .hud {
   height: 0%;
+  max-width: 500px;
   position: relative;
   .blue {
     width: 30px;
@@ -382,4 +383,68 @@ form {
 
 g > .hexagon > polygon {
   animation: .5s appear;
+}
+/*
+@keyframes float-1 {
+  100% {
+    opacity: 0;
+    transform: rotate(-30deg) translateY(-100px) translateX(-50px) scale(3);
+  }
+}
+
+@keyframes float-2 {
+  100% {
+    opacity: 0;
+    transform: rotate(-30deg) translateY(-100px) translateX(-50px) scale(3);
+  }
+}
+
+@keyframes float-3 {
+  100% {
+    opacity: 0;
+    transform: rotate(-30deg) translateY(-100px) translateX(-50px) scale(3);
+  }
+}
+
+@keyframes float-4 {
+  100% {
+    opacity: 0;
+    transform: rotate(-30deg) translateY(-100px) translateX(-50px) scale(3);
+  }
+}
+
+@keyframes float-5 {
+  100% {
+    opacity: 0;
+    transform: rotate(-30deg) translateY(-100px) translateX(-50px) scale(3);
+  }
+}
+*/
+
+@mixin float-list {
+  @for $i from 1 through 10 {
+    @keyframes float-#{$i} { 
+      0% {
+        visibility: visible;
+      }
+      100% {
+        opacity: 0;
+        
+        transform: rotate(#{50-$i*10}+deg) translateY(#{-40*$i}px) translateX(#{-100+20*$i}px) scale(#{$i%3+2});
+      }
+    }
+  }
+}
+
+@include float-list;
+
+.emoji-stack {
+  cursor: pointer;
+  position: relative;
+  .emoji {
+    position: absolute;
+    visibility: hidden;
+    bottom: 10%;
+    left: 44%;
+  }
 }

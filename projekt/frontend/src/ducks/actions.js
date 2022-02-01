@@ -106,3 +106,11 @@ export const setInvitation = (payload) => {
     payload: {invitation: payload}
   }
 }
+
+export const setEmoji = (payload) => {
+  return {
+    type: types.OTHER,
+    meta: 'game',
+    payload: payload
+  }
+}

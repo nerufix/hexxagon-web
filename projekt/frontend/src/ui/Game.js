@@ -11,6 +11,7 @@ import hexagon from './img/hexagon.svg'
 import blue from './img/blue.png'
 import red from './img/red.png'
 import Loading from './Loading'
+import Emojis from "./Emojis"
 const axios = require('axios');
 
 function Game({ id, user, game, client, ...props }) {
@@ -233,8 +234,10 @@ function Game({ id, user, game, client, ...props }) {
             <Pattern id="blue" link={blue} size={{x: 6.5, y: 5}} />
           </HexGrid>
         </div>
-        <div className="mt-3 bg-dark d-flex flex-wrap justify-content-center text-white">
+        <div className="hud mt-3 bg-dark d-flex flex-wrap justify-content-center text-white">
           <h3>{game.end ? getEndMessage() : getTurnMessage()}</h3>
+          <div className="break" />
+          <Emojis />
           <div className="break" />
           {user.role==='admin' && getAdminTweaks()}
         </div>
