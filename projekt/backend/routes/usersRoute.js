@@ -73,7 +73,7 @@ router.post('/login', (req, res) => {
     || (el.token && credentials.token === el.token.value && new Date(el.token.due) > new Date())
   )
   if (!query) {
-    res.status(418).send({message: 'Wrong credentials!'})
+    res.status(418).send(credentials.login ? {message: 'Wrong credentials!'} : {})
   } else if (credentials.remember) {
     const token = {
       value: v4(),
