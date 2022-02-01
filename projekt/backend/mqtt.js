@@ -15,7 +15,7 @@ const playerLocation = {
 }
 
 const publish = (topic, message) => {
-  setTimeout(server.publish({topic: topic, payload: message, qos: 1, retain: false}), 750)
+  setTimeout(() => server.publish({topic: topic, payload: message, qos: 1, retain: false}), 750)
 }
 
 server.on('ready', () => {
