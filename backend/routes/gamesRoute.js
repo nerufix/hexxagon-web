@@ -39,7 +39,7 @@ router.post('/create', (req, res) => {
       name: name || player,
       players: [player],
       turnCount: 0,
-      board: defaultBoard,
+      board: {...defaultBoard},
       chat: []
     }
     games.push(newGame)

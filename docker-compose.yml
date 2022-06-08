@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  api:
+    build:
+      dockerfile: .
+      context: "backend/"
+    ports:
+      - "5000:5000"
+      - "3333:3333"
+      - "7654:7654"
+  nginx:
+    build:
+      dockerfile: .
+      context: "frontend/"
+    ports:
+      - "8888:80"
+    links:
+      - "api:localhost"
