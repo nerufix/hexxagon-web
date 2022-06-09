@@ -10,7 +10,7 @@ In the `.env` file inside frontend directory, change `localhost` to your machine
 
 ## using Docker
 
-If you have docker installed on your system, just run `docker-compose up -d` after inspecting the `.yml` file.
+If you have Docker installed on your system, just run `docker-compose up -d` after inspecting the `.yml` file. By default, the app should be available on port 8888.
 
 Note: it may be neccessary to disable firewall in order to provide access to local Docker network for LAN users. Either disable it entirely or make an exception for Docker (https://mlhale.github.io/nebraska-gencyber-modules/intro_to_firewalls/advanced/ for Windows users).
 
@@ -25,7 +25,9 @@ Run
 ```sh
 npm i --force
 npm start
-``` 
+```
+
+to start the development server on port 3000 or `npm run build` to build the app.
 
 ### backend
 
